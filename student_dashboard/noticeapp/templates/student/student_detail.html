@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+{% comment %} notice_detail.html {% endcomment %}
+
+{% block title %}
+  Notice Details | E-Notice Board
+{% endblock %}
+
+{% block content %}
+  <section class="py-5">
+    <div class="container">
+
+      <!-- Page Heading -->
+      <div class="text-center mb-4">
+        <h1 style="color:#004b87;">
+          Notice Detail
+        </h1>
+        <p class="text-muted">
+          Read full notice information below
+        </p>
+      </div>
+
+      <!-- Notice Card -->
+      <div class="row justify-content-center">
+        <div class="col-lg-8">
+
+          <div class="card shadow-sm" style="border-top: 3px solid #00a2ff;">
+            <div class="card-body">
+
+              <!-- Notice Title -->
+              <h3 class="mb-2" style="color:#004b87;">
+                {{ notice.notice_title }}
+              </h3>
+
+              <!-- Meta Info -->
+              <div class="mb-3 text-muted small">
+                <span class="me-3">
+                  <strong>Department:</strong>
+                  {{ notice.department.d_name }}
+                </span>
+                <span>
+                  <strong>Created At:</strong>
+                  {{ notice.created_at|date:"d M Y" }}
+                </span>
+              </div>
+
+              <hr>
+
+              <!-- Notice Description -->
+              <p style="line-height:1.7;">
+                {{ notice.notice_description }}
+              </p>
+
+              <!-- Attachment (Optional) -->
+              {% if notice.notice_attachment %}
+                <hr>
+                <p class="mb-0">
+                  <strong>Attachment:</strong>
+                  <a href="{{ notice.notice_attachment }}" target="_blank">
+                    View Attachment
+                  </a>
+                </p>
+              {% endif %}
+
+            </div>
+          </div>
+
+          <!-- Back Button -->
+          <div class="text-center mt-4">
+            <a
+              href="{% url 'student_dboard' %}"
+              class="btn btn-outline-primary"
+            >
+              ← Back to Dashboard
+            </a>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </section>
+{% endblock %}

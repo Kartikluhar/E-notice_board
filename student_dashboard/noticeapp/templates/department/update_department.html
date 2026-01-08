@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+{% comment %} update_department.html {% endcomment %}
+
+{% block title %}
+  Update Department | E-Notice Board
+{% endblock %}
+
+{% block content %}
+  <div class="row justify-content-center py-5">
+    <div class="col-12 col-sm-10 col-md-8 col-lg-5 col-xl-4">
+      <div
+        class="card shadow-sm"
+        style="background-color:white; border-top: 3px solid #00a2ff;"
+      >
+        <div class="card-body">
+          <h1 class="text-center mb-4" style="color:#004b87;">
+            Update Department
+          </h1>
+
+          <form method="POST">
+            {% csrf_token %}
+
+            <!-- Department Name -->
+            <div class="mb-3">
+              <label class="form-label">Department Name</label>
+              <input
+                type="text"
+                name="dept_name"
+                class="form-control"
+                placeholder="Enter department name"
+                value="{{ department.d_name }}"
+                required
+              />
+            </div>
+
+            <!-- Department Code -->
+            <div class="mb-4">
+              <label class="form-label">Department Code</label>
+              <input
+                type="text"
+                name="dept_code"
+                class="form-control"
+                placeholder="Enter department code"
+                value="{{ department.d_code }}"
+                required
+              />
+            </div>
+
+            <!-- Submit Button -->
+            <div class="d-grid">
+              <button type="submit" class="btn btn-primary">
+                Update Department
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}

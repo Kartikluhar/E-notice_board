@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+{% comment %}add_notice.html{% endcomment %}
+
+{% block title %}
+  Add Notice | E-Notice Board
+{% endblock %}
+
+{% block content %}
+  <div class="row justify-content-center py-5">
+    <div class="col-12 col-sm-10 col-md-8 col-lg-6 col-xl-5">
+      <div class="card shadow-sm" style="background-color:white; border-top: 3px solid #00a2ff;">
+        <div class="card-body">
+          <h1 class="text-center mb-4" style="color:#004b87;">Create Notice</h1>
+
+          <form method="POST">
+            {% csrf_token %}
+
+            <!-- Notice Title -->
+            <div class="mb-3">
+              <label class="form-label">Title</label>
+              <input type="text" name="title" class="form-control" placeholder="Enter notice title" required />
+            </div>
+
+            <!-- Description -->
+            <div class="mb-3">
+              <label class="form-label">Description</label>
+              <textarea name="description" class="form-control" rows="4" placeholder="Write the notice description" required></textarea>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label">Attachments</label>
+              <textarea name="attachment" class="form-control" rows="4" placeholder="Give Attachments link here: "></textarea>
+            </div>
+
+            <!-- Department -->
+            <div class="mb-4">
+              <label class="form-label">Department</label>
+              <select name="department" class="form-select" required>
+                <option value="" hidden disabled selected>Select department</option>
+                {% for dept in departments %}
+                  <option value="{{ dept.id }}">{{ dept.d_name }}</option>
+                {% endfor %}
+              </select>
+            </div>
+
+            <div class="mb-4">
+              <label class="form-label">Semester</label>
+              <select name="sem" class="form-select" required>
+                <option value="" disabled hidden selected>Select semester</option>
+                {% for sem in semesters %}
+                  <option value="{{ sem }}">{{ sem }}</option>
+                {% endfor %}
+                <option value="all">Every One</option>
+              </select>
+            </div>
+
+            <!-- Submit Button -->
+            <div class="d-grid">
+              <button type="submit" class="btn btn-primary">Create Notice & Send email to Students</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}

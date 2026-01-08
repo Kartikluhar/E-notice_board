@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+{% comment %} student_login.html {% endcomment %}
+
+{% block title %}
+  Student Login | E-Notice Board
+{% endblock %}
+
+{% block content %}
+  <div class="row justify-content-center py-5">
+    <div class="col-12 col-sm-10 col-md-8 col-lg-5 col-xl-4">
+      <div
+        class="card shadow-sm"
+        style="background-color:white; border-top: 3px solid #00a2ff;"
+      >
+        <div class="card-body">
+          <h1 class="text-center mb-4" style="color:#004b87;">
+            Student Login
+          </h1>
+
+          <form method="POST">
+            {% csrf_token %}
+
+            <!-- Enrollment Number -->
+            <div class="mb-3">
+              <label class="form-label">Enrollment Number</label>
+              <input
+                type="text"
+                name="enrollment_no"
+                class="form-control"
+                placeholder="Enter enrollment number"
+                required
+              />
+            </div>
+
+            <!-- Password -->
+            <div class="mb-4">
+              <label class="form-label">Password</label>
+              <input
+                type="password"
+                name="password"
+                class="form-control"
+                placeholder="Enter password"
+                required
+              />
+            </div>
+
+            <!-- Submit -->
+            <div class="d-grid">
+              <button type="submit" class="btn btn-primary">
+                Login
+              </button>
+            </div>
+          </form>
+
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}

@@ -1,0 +1,100 @@
+{% extends 'base.html' %}
+{% comment %} update_notice.html {% endcomment %}
+
+{% block title %}
+  Update Notice | E-Notice Board
+{% endblock %}
+
+{% block content %}
+  <div class="row justify-content-center py-5">
+    <div class="col-12 col-sm-10 col-md-8 col-lg-6 col-xl-5">
+      <div
+        class="card shadow-sm"
+        style="background-color:white; border-top: 3px solid #00a2ff;"
+      >
+        <div class="card-body">
+          <h1 class="text-center mb-4" style="color:#004b87;">
+            Update Notice
+          </h1>
+
+          <form method="POST">
+            {% csrf_token %}
+
+            <!-- Notice Title -->
+            <div class="mb-3">
+              <label class="form-label">Title</label>
+              <input
+                type="text"
+                name="title"
+                class="form-control"
+                placeholder="Enter notice title"
+                value="{{ notice.notice_title }}"
+                required
+              />
+            </div>
+
+            <!-- Description -->
+            <div class="mb-3">
+              <label class="form-label">Description</label>
+              <textarea
+                name="description"
+                class="form-control"
+                rows="4"
+                placeholder="Write the notice description"
+                required
+              >{{ notice.notice_description }}</textarea>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label">Attachments</label>
+              <textarea
+                name="attachment"
+                class="form-control"
+                rows="4"
+                placeholder="Write attachments link here: "
+              >{{ notice.notice_attachment }}</textarea>
+            </div>
+
+            <!-- Department -->
+            <div class="mb-4">
+              <label class="form-label">Department</label>
+              <select name="department" class="form-select" required>
+                <option value="" disabled>Select department</option>
+                {% for dept in departments %}
+                  <option
+                    value="{{ dept.id }}"
+                    {% if dept.id == notice.department.id %}selected{% endif %}
+                  >
+                    {{ dept.d_name }}
+                  </option>
+                {% endfor %}
+              </select>
+            </div>
+
+            <div class="mb-4">
+              <label class="form-label">Semester</label>
+              <select name="sem" class="form-select" required>
+                <option value="" disabled hidden selected>Select semester</option>
+                {% for sem in semesters %}
+                  <option 
+                  value="{{ sem }}"
+                  {% if sem|stringformat:'s' == notice.sem %}selected{% endif %}
+                  >
+                  {{ sem }}
+                </option>
+                {% endfor %}
+              </select>
+            </div>
+
+            <!-- Submit Button -->
+            <div class="d-grid">
+              <button type="submit" class="btn btn-primary">
+                Submit Notice
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}

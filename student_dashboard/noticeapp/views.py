@@ -6,6 +6,10 @@ from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.decorators import login_required
 from .models import AdminProfile, Department, Notice, Students
 import re
+from django.db.models import Q
+from django.core.mail import send_mail
+from django.conf import settings
+
 
 password_validation = r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$'
 email_validation = r'^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$'
@@ -105,6 +109,7 @@ def admin_list(request):
         'admins': admins
     })
 
+
 @login_required(login_url='admin_login')
 def edit_admin(request, pk):
     admin = get_object_or_404(User, pk=pk, is_staff=True)
@@ -130,6 +135,7 @@ def edit_admin(request, pk):
     return render(request, 'admin/edit_admin.html', {
         'admin': admin
     })
+
 
 @login_required(login_url='admin_login')
 def delete_admin(request, pk):
@@ -249,6 +255,39 @@ def add_notice(request):
                 sem=sem
             )
 
+            emails = Students.objects.filter(
+                department=dept,
+                sem=sem
+            ).values_list('email', flat=True)
+
+            subject = "New Notice Published – College Portal"
+            if sem == 'all':
+                message = (
+                    f"Dear Student,\n\n"
+                    f"We would like to inform you that a new notice has been published on the College Portal.\n\n"
+                    f"Title: {notice_title}\n\n"
+                    f"Please log in to the portal to view the complete details.\n\n"
+                    f"Regards,\n"
+                    f"College Administration"
+                )
+            else:
+                message = (
+                    f"Dear Student,\n\n"
+                    f"A new notice has been published for your department on the College Portal.\n\n"
+                    f"Title: {notice_title}\n\n"
+                    f"Please log in to the portal to view the complete details.\n\n"
+                    f"Regards,\n"
+                    f"College Administration"
+                )
+
+            send_mail(
+                subject,
+                message,
+                settings.DEFAULT_FROM_EMAIL,
+                list(emails),
+                fail_silently=True
+            )
+
             messages.success(request, "Notice is created!!")
 
         except Exception as e:
@@ -296,6 +335,39 @@ def update_notice(request, pk):
             notice.sem = sem
 
             notice.save()
+
+            emails = Students.objects.filter(
+                department=dept,
+                sem=sem
+            ).values_list('email', flat=True)
+
+            subject = "Notice has been Updated – College Portal"
+            if sem == 'all':
+                message = (
+                    f"Dear Student,\n\n"
+                    f"This is to inform you that an existing notice has been updated on the College Portal.\n\n"
+                    f"Updated Notice Title: {notice_title}\n\n"
+                    f"Kindly log in to the portal to check the latest information.\n\n"
+                    f"Regards,\n"
+                    f"College Administration"
+                )
+            else:
+                message = (
+                    f"Dear Student,\n\n"
+                    f"An existing notice for your department has been updated on the College Portal.\n\n"
+                    f"Updated Notice Title: {notice_title}\n\n"
+                    f"Kindly log in to the portal to check the latest information.\n\n"
+                    f"Regards,\n"
+                    f"College Administration"
+                )
+
+            send_mail(
+                subject,
+                message,
+                settings.DEFAULT_FROM_EMAIL,
+                list(emails),
+                fail_silently=True
+            )
 
             messages.success(request, "Department updated successfully!")
 
@@ -416,13 +488,32 @@ def delete_student(request, pk):
 
 @login_required(login_url='admin_login')
 def student_list(request):
-    s_list = Students.objects.all()
+    students = Students.objects.all()
+    departments = Department.objects.all()
 
-    s_list_ds = []
+    search = request.GET.get('search')
+    department = request.GET.get('department')
+    sem = request.GET.get('sem')
 
-    return render(request, 'admin/admin_list_student.html', {
-        'students': s_list
-    })
+    if search:
+        students = students.filter(
+            Q(full_name__icontains=search) |
+            Q(email__icontains=search) |
+            Q(enrollment_no__icontains=search)
+        )
+
+    if department:
+        students = students.filter(department_id=department)
+
+    if sem:
+        students = students.filter(sem=sem)
+
+    context = {
+        'students': students,
+        'departments': departments,
+    }
+
+    return render(request, 'admin/admin_list_student.html', context)
 
 
 # ====================================================================================
@@ -431,26 +522,29 @@ def student_list(request):
 
 # student login using enrollment no and password and all data stored in Student model
 def student_login(request):
-    if request.method == 'POST':
-        try:
-            enrollment_no = request.POST.get('enrollment_no')
-            password = request.POST.get('password')
-            student = Students.objects.get(enrollment_no=enrollment_no)
-            student_pass = student.password
-            if student:
-                if check_password(password=password, encoded=student_pass):
-                    request.session['student'] = student.id
-                    request.session['is_student_logged_in'] = True
-                    messages.success(request, "Logged in successfully!")
-                    return redirect('student_dboard')
+    if 'student' in request.sesstion:
+        return render(request, 'student/student_dboard.html')
+    else:
+        if request.method == 'POST':
+            try:
+                enrollment_no = request.POST.get('enrollment_no')
+                password = request.POST.get('password')
+                student = Students.objects.get(enrollment_no=enrollment_no)
+                student_pass = student.password
+                if student:
+                    if check_password(password=password, encoded=student_pass):
+                        request.session['student'] = student.id
+                        request.session['is_student_logged_in'] = True
+                        messages.success(request, "Logged in successfully!")
+                        return redirect('student_dboard')
+                    else:
+                        messages.warning(request, "Enter correct password!")
                 else:
-                    messages.warning(request, "Enter correct password!")
-            else:
-                messages.error(
-                    request, "Student not found enter correct enrollment.")
-        except Exception as e:
-            print(e)
-    return render(request, 'student/student_login.html')
+                    messages.error(
+                        request, "Student not found enter correct enrollment.")
+            except Exception as e:
+                print(e)
+        return render(request, 'student/student_login.html')
 
 
 def student_dboard(request):

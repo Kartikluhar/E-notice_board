@@ -33,6 +33,62 @@
       </a>
     </div>
 
+    <!-- Filter & Search -->
+<form method="get" class="row g-3 mb-4 justify-content-center">
+
+  <!-- Search -->
+  <div class="col-md-4">
+    <input
+      type="text"
+      name="search"
+      class="form-control"
+      placeholder="Search by name, email or enrollment"
+      value="{{ request.GET.search }}"
+    />
+  </div>
+
+  <!-- Department Filter -->
+  <div class="col-md-3">
+    <select name="department" class="form-select">
+      <option value="">All Departments</option>
+      {% for dept in departments %}
+        <option
+          value="{{ dept.id }}"
+          {% if request.GET.department == dept.id|stringformat:"s" %}selected{% endif %}
+        >
+          {{ dept.d_name }}
+        </option>
+      {% endfor %}
+    </select>
+  </div>
+
+  <!-- Semester Filter -->
+  <div class="col-md-2">
+    <select name="sem" class="form-select">
+      <option value="">All Sem</option>
+      {% for i in "12345678" %}
+        <option
+          value="{{ i }}"
+          {% if request.GET.sem == i %}selected{% endif %}
+        >
+          Sem {{ i }}
+        </option>
+      {% endfor %}
+    </select>
+  </div>
+
+  <!-- Buttons -->
+  <div class="col-md-3 d-flex gap-2">
+    <button type="submit" class="btn btn-primary w-100">
+      Filter
+    </button>
+    <a href="{% url 'student_list' %}" class="btn btn-secondary w-100">
+      Reset
+    </a>
+  </div>
+
+</form>
+
     <!-- Student Table Card -->
     <div class="card">
       <div
@@ -58,6 +114,7 @@
               <th>Email</th>
               <th>Full Name</th>
               <th>Department</th>
+              <th>Sem</th>
               <th>Role</th>
               <th class="text-center">Actions</th>
             </tr>
@@ -70,6 +127,7 @@
               <td>{{ student.email }}</td>
               <td>{{ student.full_name }}</td>
               <td>{{ student.department.d_name }}</td>
+              <td>{{ student.sem }}</td>
               <td>{{ student.role }}</td>
 
               <td class="text-center">

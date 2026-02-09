@@ -95,7 +95,7 @@
                 {% for sem in semesters %}
                   <option 
                   value="{{ sem }}"
-                  {% if sem == student.sem %}selected{% endif %}
+                  {% if sem|stringformat:'s' == student.sem %}selected{% endif %}
                   >
                   {{ sem }}
                 </option>

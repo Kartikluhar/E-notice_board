@@ -522,7 +522,7 @@ def student_list(request):
 
 # student login using enrollment no and password and all data stored in Student model
 def student_login(request):
-    if 'student' in request.sesstion:
+    if 'student' in request.session:
         return render(request, 'student/student_dboard.html')
     else:
         if request.method == 'POST':

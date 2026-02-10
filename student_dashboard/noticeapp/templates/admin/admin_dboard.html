@@ -85,6 +85,73 @@
         <a href="{% url 'admin_list' %}" class="btn btn-outline-primary">Manage Admin</a>
       </div>
 
+      <!-- Filter & Search -->
+<form method="get" class="row g-3 mb-4 justify-content-center">
+
+  <!-- Search -->
+  <div class="col-md-4">
+    <input
+      type="text"
+      name="search"
+      class="form-control"
+      placeholder="Search by notice title"
+      value="{{ request.GET.search }}"
+    />
+  </div>
+
+  <!-- Department Filter -->
+  <div class="col-md-3">
+    <select name="department" class="form-select">
+      <option value="">All Departments</option>
+      {% for dept in departments %}
+        <option
+          value="{{ dept.id }}"
+          {% if request.GET.department == dept.id|stringformat:"s" %}selected{% endif %}
+        >
+          {{ dept.d_name }}
+        </option>
+      {% endfor %}
+    </select>
+  </div>
+
+  <!-- Semester Filter -->
+  <div class="col-md-2">
+    <select name="sem" class="form-select">
+      <option value="">All Sem</option>
+      {% for i in "12345678" %}
+        <option value="{{ i }}" {% if request.GET.sem == i %}selected{% endif %}>
+          Sem {{ i }}
+        </option>
+      {% endfor %}
+      <option value="all" {% if request.GET.sem == "all" %}selected{% endif %}>
+        Everyone
+      </option>
+    </select>
+  </div>
+
+  <!-- Status Filter -->
+<div class="col-md-2">
+  <select name="status" class="form-select">
+    <option value="">All Notices</option>
+    <option value="active" {% if request.GET.status == "active" %}selected{% endif %}>
+      Active
+    </option>
+    <option value="expired" {% if request.GET.status == "expired" %}selected{% endif %}>
+      Expired
+    </option>
+  </select>
+</div>
+
+
+  <!-- Buttons -->
+  <div class="col-md-3 d-flex gap-2">
+    <button type="submit" class="btn btn-primary w-100">Filter</button>
+    <a href="{% url 'admin_dboard' %}" class="btn btn-secondary w-100">Reset</a>
+  </div>
+
+</form>
+
+
       <!-- Notices Table -->
       <div class="card">
         <div class="card-header d-flex justify-content-between align-items-center" style="background-color:#e0f0ff;">
@@ -100,6 +167,7 @@
                 <th>Department</th>
                 <th>Sem</th>
                 <th>Created At</th>
+                <th>Status</th>
                 <th class="text-center">Actions</th>
               </tr>
             </thead>
@@ -110,6 +178,13 @@
                   <td>{{ notice.department.d_name }}</td>
                   <td>{{ notice.sem|upper }}</td>
                   <td>{{ notice.created_at|date:'d M Y' }}</td>
+                  <td>
+                    {% if notice.expired_date <= now %}
+                      <span class="badge bg-danger">Expired</span>
+                    {% else %}
+                      <span class="badge bg-success">Active</span>
+                    {% endif %}
+                </td>
                   <td class="text-center">
                     <a href="{% url 'update_notice' notice.id %}" class="btn btn-sm btn-info me-2">Edit</a>
                     <a href="{% url 'delete_notice' notice.id %}" class="btn btn-sm btn-danger">Delete</a>

@@ -9,6 +9,8 @@ import re
 from django.db.models import Q
 from django.core.mail import send_mail
 from django.conf import settings
+from django.utils import timezone
+from django.utils.dateparse import parse_datetime
 
 
 password_validation = r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$'
@@ -85,19 +87,43 @@ def add_admin(request):
 
 @login_required(login_url='admin_login')
 def admin_dboard(request):
-    notice = Notice.objects.all()
+    notices = Notice.objects.select_related(
+        'department').all().order_by('-created_at')
     students = Students.objects.all()
     departments = Department.objects.all()
 
+    # 🔍 Filters
+    search = request.GET.get('search')
+    department = request.GET.get('department')
+    sem = request.GET.get('sem')
+    status = request.GET.get('status')   # 👈 NEW
+
+    if search:
+        notices = notices.filter(notice_title__icontains=search)
+
+    if department:
+        notices = notices.filter(department_id=department)
+
+    if sem:
+        notices = notices.filter(sem=sem)
+
+    now = timezone.now()
+    if status == 'active':
+        notices = notices.filter(expired_date__gt=now)
+    elif status == 'expired':
+        notices = notices.filter(expired_date__lte=now)
+
     lengths = {
-        'notice_len': len(notice),
-        'student_len': len(students),
-        'department_len': len(departments)
+        'notice_len': Notice.objects.count(),
+        'student_len': Students.objects.count(),
+        'department_len': Department.objects.count()
     }
 
     return render(request, 'admin/admin_dboard.html', {
-        'notices': notice,
-        'lengths': lengths
+        'notices': notices,
+        'departments': departments,
+        'lengths': lengths,
+        'now': timezone.now() 
     })
 
 
@@ -244,6 +270,9 @@ def add_notice(request):
             notice_attachment = request.POST.get('attachment')
             department_id = request.POST.get('department')
             sem = request.POST.get('sem')
+            expired_date_str = request.POST.get('expired_date')
+
+            expired_date = parse_datetime(expired_date_str)
 
             dept = Department.objects.get(id=department_id)
 
@@ -252,7 +281,8 @@ def add_notice(request):
                 notice_description=notice_description,
                 department=dept,
                 notice_attachment=notice_attachment,
-                sem=sem
+                sem=sem,
+                expired_date=expired_date
             )
 
             emails = Students.objects.filter(
@@ -325,6 +355,8 @@ def update_notice(request, pk):
             department_id = request.POST.get('department')
             notice_attachment = request.POST.get('attachment')
             sem = request.POST.get('sem')
+            expired_date_str = request.POST.get('expired_date')
+            expired_date = parse_datetime(expired_date_str)
 
             dept = Department.objects.get(id=department_id)
 
@@ -333,6 +365,7 @@ def update_notice(request, pk):
             notice.department = dept
             notice.notice_attachment = notice_attachment
             notice.sem = sem
+            notice.expired_date = expired_date
 
             notice.save()
 
@@ -549,17 +582,27 @@ def student_login(request):
 
 def student_dboard(request):
     if 'student' in request.session:
-        # student = Students.objects.get(id=request.session['student'])
         student = get_object_or_404(Students, pk=request.session['student'])
+        now = timezone.now()
+
         semester_notices = Notice.objects.filter(
-            department=student.department, sem=student.sem)
+            department=student.department,
+            sem=student.sem,
+            expired_date__gt=now,
+            is_active=True
+        ).order_by('-created_at')
+
         common_notices = Notice.objects.filter(
-            department=student.department, sem='all')
+            department=student.department,
+            sem='all',
+            expired_date__gt=now,
+            is_active=True
+        ).order_by('-created_at')
 
         return render(request, 'student/student_dboard.html', {
             'student': student,
             'semester_notices': semester_notices,
-            'total_notices': (len(semester_notices) + len(common_notices)),
+            'total_notices': (semester_notices.count() + common_notices.count()),
             'common_notices': common_notices
         })
     else:

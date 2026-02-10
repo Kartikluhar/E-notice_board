@@ -1,8 +1,11 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.utils import timezone
+from datetime import date, timedelta
 
 # Create your models here.
-
+def get_expire_date():
+    return timezone.now() + timedelta(days=3)
 
 class AdminProfile(models.Model):
     admin_user = models.OneToOneField(
@@ -32,3 +35,5 @@ class Notice(models.Model):
     department = models.ForeignKey(Department, on_delete=models.CASCADE)
     sem = models.CharField(max_length=5, default='1')
     created_at = models.DateTimeField(auto_now_add=True)
+    expired_date = models.DateTimeField(default=get_expire_date)
+    is_active = models.BooleanField(default=True)

@@ -657,7 +657,6 @@ def student_dboard(request):
             'common_notices': common_notices
         })
     else:
-        messages.warning(request, "Session has expired! Please login again")
         return redirect('student_login')
 
 

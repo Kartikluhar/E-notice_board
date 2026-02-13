@@ -37,7 +37,7 @@ def admin_login(request):
             role = user.profile.role
             if role.lower() == 'admin':
                 login(request, user=user)
-                return redirect('admin_dboard')
+                return redirect('notice_list')
             else:
                 messages.warning(request, "You are not allowed here!!")
         else:
@@ -335,7 +335,7 @@ def delete_notice(request, pk):
         print(e)
         messages.error(request, "Something went wrong! Can't delete Notice")
 
-    return redirect('admin_dboard')
+    return redirect('notice_list')
 
 
 @login_required(login_url='admin_login')
@@ -399,7 +399,7 @@ def update_notice(request, pk):
 
             messages.success(request, "Department updated successfully!")
 
-            return redirect('admin_dboard')
+            return redirect('notice_list')
         except Exception as e:
             print(e)
             messages.error(
@@ -543,7 +543,7 @@ def update_student(request, pk):
 
             messages.success(request, "Student Updated successfully!!")
 
-            return redirect('admin_dboard')
+            return redirect('notice_list')
 
         except Exception as e:
             print(e)

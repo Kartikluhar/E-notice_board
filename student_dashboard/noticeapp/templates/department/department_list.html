@@ -6,18 +6,21 @@
 {% endblock %}
 
 {% block content %}
-  <style>
-    
-  </style>
+  <style></style>
 
   <section class="py-4">
     <div class="container">
       <!-- Page Header -->
-      <div class="text-center mb-4">
+      {% comment %} <div class="text-center mb-4">
         <h2 class="d-flex justify-content-center align-items-center gap-2" style="color:#203a43;">
           <i class="bi bi-building"></i> Department List
           <span class="badge bg-dark rounded-pill">{{ total_departments }}</span>
         </h2>
+        <p class="text-muted small">Manage all departments here</p>
+      </div> {% endcomment %}
+
+      <div class="text-center mb-4 page-header">
+        <h2><i class="bi bi-building"></i> Department List <span class="badge bg-dark rounded-pill">{{ total_departments }}</span></h2>
         <p class="text-muted small">Manage all departments here</p>
       </div>
 

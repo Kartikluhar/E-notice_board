@@ -9,6 +9,19 @@ body {
 }
 
 /* =========================================
+   LOGIN PAGE TEXT FIX
+========================================= */
+
+.login-title {
+    color: #203a43;
+}
+
+body.dark-mode .login-title {
+    color: #ffffff;
+}
+
+
+/* =========================================
    NAVBAR
 ========================================= */
 
@@ -39,8 +52,13 @@ body {
     transition: 0.3s;
 }
 
-.nav-link:hover::after { width: 100%; }
-.nav-link:hover { color: #00d4ff !important; }
+.nav-link:hover::after {
+    width: 100%;
+}
+
+.nav-link:hover {
+    color: #00d4ff !important;
+}
 
 /* =========================================
    COMMON CARD STYLE (Reusable)
@@ -134,8 +152,15 @@ body {
     color: white;
 }
 
-.btn-delete { background: #dc3545; color: white; }
-.btn-edit { background: #17a2b8; color: white; }
+.btn-delete {
+    background: #dc3545;
+    color: white;
+}
+
+.btn-edit {
+    background: #17a2b8;
+    color: white;
+}
 
 .btn-primary-custom:hover,
 .btn-create:hover,
@@ -196,8 +221,13 @@ body {
     background: #ddd;
 }
 
-.divider::before { left: 0; }
-.divider::after { right: 0; }
+.divider::before {
+    left: 0;
+}
+
+.divider::after {
+    right: 0;
+}
 
 .divider span {
     background: #fff;
@@ -221,8 +251,15 @@ body {
 ========================================= */
 
 @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(15px); }
-    to { opacity: 1; transform: translateY(0); }
+    from {
+        opacity: 0;
+        transform: translateY(15px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 /* =========================================

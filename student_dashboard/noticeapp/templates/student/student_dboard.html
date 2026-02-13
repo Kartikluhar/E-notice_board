@@ -6,131 +6,123 @@
 {% endblock %}
 
 {% block content %}
-  <!-- Student Dashboard -->
-  <section class="py-5">
+  <style>
+    
+  </style>
+
+  <section class="py-4">
     <div class="container">
-      <h1 class="text-center mb-2" style="color:#004b87;">{{ student.full_name }}'s Dashboard</h1>
-      <p class="text-center text-muted mb-5">View latest notices and important updates</p>
-
-      <!-- Student Info -->
-      <div class="row justify-content-center mb-5">
-        <div class="col-md-10 col-lg-8">
-          <div class="card shadow-sm" style="border-top: 3px solid #00a2ff;">
-            <div class="card-body">
-              <h5 class="text-center mb-4" style="color:#004b87;">Student Information</h5>
-
-              <div class="row">
-                <div class="col-md-6 mb-3">
-                  <p class="mb-1 text-muted small">Full Name</p>
-                  <p class="fw-semibold">{{ student.full_name }}</p>
-                </div>
-
-                <div class="col-md-6 mb-3">
-                  <p class="mb-1 text-muted small">Enrollment Number</p>
-                  <p class="fw-semibold">{{ student.enrollment_no }}</p>
-                </div>
-
-                <div class="col-md-6 mb-3">
-                  <p class="mb-1 text-muted small">Email</p>
-                  <p class="fw-semibold">{{ student.email }}</p>
-                </div>
-
-                <div class="col-md-6 mb-3">
-                  <p class="mb-1 text-muted small">Department</p>
-                  <p class="fw-semibold">{{ student.department.d_name }}</p>
-                </div>
-
-                {% if student.sem %}
-                  <div class="col-md-6 mb-3">
-                    <p class="mb-1 text-muted small">Semester</p>
-                    <p class="fw-semibold">{{ student.sem|upper }}</p>
-                  </div>
-                {% endif %}
-              </div>
-            </div>
-          </div>
-        </div>
+      <!-- Dashboard Header -->
+      <div class="dashboard-header" style="text-align: center;">
+        <h3>
+          <i class="bi bi-person-circle"></i>
+          Welcome, {{ student.full_name }}
+        </h3>
+        <small>View latest notices and important updates</small>
       </div>
 
       <!-- Summary Cards -->
       <div class="row text-center g-4 mb-5">
         <div class="col-md-6">
-          <div class="card h-100" style="border-top: 3px solid #00a2ff;">
+          <div class="card notice-card h-100">
             <div class="card-body">
-              <p class="text-uppercase text-muted small mb-1">Your Department</p>
-              <h4>{{ student.department.d_name }}</h4>
+              <p class="text-uppercase text-muted small mb-1">Department</p>
+              <h5>{{ student.department.d_name }}</h5>
             </div>
           </div>
         </div>
 
         <div class="col-md-6">
-          <div class="card h-100" style="border-top: 3px solid #00a2ff;">
+          <div class="card notice-card h-100">
             <div class="card-body">
               <p class="text-uppercase text-muted small mb-1">Total Notices</p>
-              <h4>{{ total_notices }}</h4>
+              <h5>{{ total_notices }}</h5>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- Notices Section -->
-      <h4 class="mb-3" style="color:#004b87;">Department Notices</h4>
+      <!-- Semester Notices -->
+      <!-- Semester Notices -->
+      <h4 class="section-title">🎓 Semester Notices (Sem: {{ student.sem|upper }})</h4>
 
-      <h4 class="mb-3 mt-4" style="color:#004b87;">🎓 Semester Notices (Sem: {{ student.sem|upper }})</h4>
+      {% if semester_notices %}
+        <div id="semesterCarousel" class="carousel slide carousel-dark mb-5" data-bs-ride="carousel">
+          <div class="carousel-inner p-3">
+            {% for notice in semester_notices %}
+              <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                <div class="row justify-content-center">
+                  <div class="col-md-8 col-lg-6">
+                    <div class="card notice-card h-100">
+                      <div class="card-body d-flex flex-column">
+                        <h5>{{ notice.notice_title }}</h5>
 
-      <div class="row g-4 mb-5">
-        {% for notice in semester_notices %}
-          <div class="col-md-6 col-lg-4">
-            <div class="card h-100 shadow-sm" style="border-top: 3px solid #00a2ff;">
-              <div class="card-body d-flex flex-column">
-                <h5 style="color:#004b87;">{{ notice.notice_title }}</h5>
+                        <p class="text-muted small mb-2">{{ notice.created_at|date:'d M Y' }}</p>
 
-                <p class="text-muted small mb-2">{{ notice.created_at|date:'d M Y' }}</p>
+                        <p class="flex-grow-1">{{ notice.notice_description|truncatewords:25 }}...</p>
 
-                <p class="flex-grow-1">{{ notice.notice_description|truncatewords:18 }}...</p>
+                        {% if notice.notice_attachment %}
+                          <p class="text-muted small mb-3">📎 Attachment available</p>
+                        {% endif %}
 
-                {% if notice.notice_attachment %}
-                  <p class="text-muted small mb-3">📎 Attachment available</p>
-                {% endif %}
-
-                <a href="{% url 'notice_detail' notice.id %}" class="btn btn-outline-primary mt-auto">Read More →</a>
+                        <a href="{% url 'notice_detail' notice.id %}" class="btn btn-outline-primary btn-read mt-auto">Read More →</a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
-            </div>
+            {% endfor %}
           </div>
-        {% empty %}
-          <div class="col-12">
-            <div class="alert alert-info text-center">No semester-specific notices available.</div>
-          </div>
-        {% endfor %}
-      </div>
 
-      <h4 class="mb-3" style="color:#004b87;">📢 Common Notices (All Students)</h4>
+          <!-- Controls -->
+          <button class="carousel-control-prev" type="button" data-bs-target="#semesterCarousel" data-bs-slide="prev"><span class="carousel-control-prev-icon bg-dark rounded-circle p-3"></span></button>
 
-      <div class="row g-4">
-        {% for notice in common_notices %}
-          <div class="col-md-6 col-lg-4">
-            <div class="card h-100 shadow-sm" style="border-top: 3px solid #00a2ff;">
-              <div class="card-body d-flex flex-column">
-                <h5 style="color:#004b87;">{{ notice.notice_title }}</h5>
+          <button class="carousel-control-next" type="button" data-bs-target="#semesterCarousel" data-bs-slide="next"><span class="carousel-control-next-icon bg-dark rounded-circle p-3"></span></button>
+        </div>
+      {% else %}
+        <div class="alert alert-info text-center">No semester-specific notices available.</div>
+      {% endif %}
 
-                <p class="text-muted small mb-2">{{ notice.created_at|date:'d M Y' }}</p>
+      <!-- Common Notices -->
+      <!-- Common Notices -->
+      <h4 class="section-title">📢 Common Notices (All Students)</h4>
 
-                <p class="flex-grow-1">{{ notice.notice_description|truncatewords:18 }}...</p>
+      {% if common_notices %}
+        <div id="commonCarousel" class="carousel slide" data-bs-ride="carousel">
+          <div class="carousel-inner">
+            {% for notice in common_notices %}
+              <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                <div class="row justify-content-center">
+                  <div class="col-md-8 col-lg-6">
+                    <div class="card notice-card h-100">
+                      <div class="card-body d-flex flex-column">
+                        <h5>{{ notice.notice_title }}</h5>
 
-                {% if notice.notice_attachment %}
-                  <p class="text-muted small mb-3">📎 Attachment available</p>
-                {% endif %}
+                        <p class="text-muted small mb-2">{{ notice.created_at|date:'d M Y' }}</p>
 
-                <a href="{% url 'notice_detail' notice.id %}" class="btn btn-outline-primary mt-auto">Read More →</a>
+                        <p class="flex-grow-1">{{ notice.notice_description|truncatewords:25 }}...</p>
+
+                        {% if notice.notice_attachment %}
+                          <p class="text-muted small mb-3">📎 Attachment available</p>
+                        {% endif %}
+
+                        <a href="{% url 'notice_detail' notice.id %}" class="btn btn-outline-primary btn-read mt-auto">Read More →</a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
-            </div>
+            {% endfor %}
           </div>
-        {% empty %}
-          <div class="col-12">
-            <div class="alert alert-info text-center">No common notices available.</div>
-          </div>
-        {% endfor %}
-      </div>
+
+          <!-- Controls -->
+          <button class="carousel-control-prev" type="button" data-bs-target="#commonCarousel" data-bs-slide="prev"><span class="carousel-control-prev-icon bg-dark rounded-circle p-3"></span></button>
+
+          <button class="carousel-control-next" type="button" data-bs-target="#commonCarousel" data-bs-slide="next"><span class="carousel-control-next-icon bg-dark rounded-circle p-3"></span></button>
+        </div>
+      {% else %}
+        <div class="alert alert-info text-center">No common notices available.</div>
+      {% endif %}
     </div>
   </section>
 {% endblock %}

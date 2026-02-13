@@ -1,54 +1,66 @@
 {% extends 'base.html' %}
-{% comment %} add_department.html {% endcomment %}
+{% comment %}add_department.html{% endcomment %}
 
 {% block title %}
   Add Department | E-Notice Board
 {% endblock %}
 
 {% block content %}
-  <div class="row justify-content-center py-5">
-    <div class="col-12 col-sm-10 col-md-8 col-lg-5 col-xl-4">
-      <div
-        class="card shadow-sm"
-        style="background-color:white; border-top: 3px solid #00a2ff;"
-      >
-        <div class="card-body">
-          <h1 class="text-center mb-4" style="color:#004b87;">
-            Add Department
-          </h1>
+  <style>
+    
+  </style>
 
+  <div class="row justify-content-center py-4">
+    <div class="col-12 col-md-9 col-lg-6">
+      <div class="card dept-card">
+        <!-- Header -->
+        <div class="dept-header text-center">
+          <h3 class="mb-1"><i class="bi bi-building"></i> Add Department</h3>
+          <small>Create a new department</small>
+        </div>
+
+        <div class="card-body p-4">
+          <!-- Manual Department Form -->
           <form method="POST">
             {% csrf_token %}
 
-            <!-- Department Name -->
             <div class="mb-3">
-              <label class="form-label">Department Name</label>
-              <input
-                type="text"
-                name="dept_name"
-                class="form-control"
-                placeholder="Enter department name"
-                required
-              />
+              <label class="form-label"><i class="bi bi-diagram-3"></i> Department Name</label>
+              <input type="text" name="dept_name" class="form-control" placeholder="Enter department name" required />
             </div>
 
-            <!-- Department Code -->
             <div class="mb-4">
-              <label class="form-label">Department Code</label>
-              <input
-                type="text"
-                name="dept_code"
-                class="form-control"
-                placeholder="Enter department code"
-                required
-              />
+              <label class="form-label"><i class="bi bi-hash"></i> Department Code</label>
+              <input type="text" name="dept_code" class="form-control" placeholder="Enter department code" required />
             </div>
 
-            <!-- Submit Button -->
             <div class="d-grid">
-              <button type="submit" class="btn btn-primary">
-                Save Department
-              </button>
+              <button type="submit" class="btn btn-save text-white"><i class="bi bi-check-circle"></i> Save Department</button>
+            </div>
+          </form>
+
+          <!-- Divider -->
+          <div class="divider mt-4">
+            <span>OR</span>
+          </div>
+
+          <!-- CSV Upload Section -->
+          <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            <div class="mb-3">
+              <label class="form-label">
+                <i class="bi bi-file-earmark-spreadsheet"></i>
+                Upload CSV File
+              </label>
+
+              <input type="file" name="csv_file" class="form-control" accept=".csv" />
+
+              <small class="text-muted">CSV must contain: dept_name, dept_code</small>
+            </div>
+
+            <div class="d-grid">
+              <button type="submit" class="btn btn-upload text-white"><i class="bi bi-upload"></i> Upload CSV</button>
             </div>
           </form>
         </div>

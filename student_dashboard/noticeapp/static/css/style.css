@@ -1,0 +1,277 @@
+/* =========================================
+   GLOBAL
+========================================= */
+
+body {
+    background: linear-gradient(135deg, #f4f7ff, #e9f2ff);
+    font-family: 'Segoe UI', sans-serif;
+    transition: background 0.4s ease, color 0.4s ease;
+}
+
+/* =========================================
+   NAVBAR
+========================================= */
+
+.navbar {
+    background: linear-gradient(90deg, #0f2027, #203a43, #2c5364);
+    padding: 12px 0;
+}
+
+.navbar-brand,
+.nav-link {
+    color: #ffffff !important;
+}
+
+.nav-link {
+    position: relative;
+    margin: 0 8px;
+    transition: 0.3s;
+}
+
+.nav-link::after {
+    content: '';
+    position: absolute;
+    width: 0%;
+    height: 2px;
+    bottom: 0;
+    left: 0;
+    background-color: #00d4ff;
+    transition: 0.3s;
+}
+
+.nav-link:hover::after { width: 100%; }
+.nav-link:hover { color: #00d4ff !important; }
+
+/* =========================================
+   COMMON CARD STYLE (Reusable)
+========================================= */
+
+.card,
+.notice-card,
+.student-card,
+.admin-card,
+.dept-card,
+.profile-card,
+.filter-card,
+.table-card,
+.dept-list-card,
+.login-card {
+    border-radius: 18px;
+    border: none;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+    animation: fadeIn 0.5s ease-in-out;
+    background: #ffffff;
+}
+
+/* =========================================
+   COMMON HEADER GRADIENT
+========================================= */
+
+.card-header-custom,
+.notice-header,
+.student-header,
+.admin-header,
+.dept-header,
+.login-header,
+.profile-header,
+.dept-list-header,
+.dashboard-header {
+    background: linear-gradient(90deg, #0f2027, #203a43, #2c5364);
+    color: white;
+    padding: 20px;
+    border-radius: 18px 18px 0 0;
+}
+
+/* =========================================
+   FORM ELEMENTS
+========================================= */
+
+.form-control,
+.form-select {
+    border-radius: 12px;
+    transition: 0.3s;
+}
+
+.form-control:focus,
+.form-select:focus {
+    border-color: #00c6ff;
+    box-shadow: 0 0 8px rgba(0, 198, 255, 0.5);
+}
+
+.form-control::placeholder {
+    color: #bbbbbb;
+}
+
+/* =========================================
+   BUTTONS (Reusable)
+========================================= */
+
+.btn {
+    border-radius: 25px;
+    padding: 6px 18px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+}
+
+.btn-primary-custom,
+.btn-create,
+.btn-update,
+.btn-save,
+.btn-login,
+.btn-gradient {
+    background: linear-gradient(90deg, #00c6ff, #0072ff);
+    border: none;
+    color: white;
+}
+
+.btn-upload {
+    background: linear-gradient(90deg, #11998e, #38ef7d);
+    border: none;
+    color: white;
+}
+
+.btn-delete { background: #dc3545; color: white; }
+.btn-edit { background: #17a2b8; color: white; }
+
+.btn-primary-custom:hover,
+.btn-create:hover,
+.btn-update:hover,
+.btn-save:hover,
+.btn-login:hover,
+.btn-gradient:hover,
+.btn-upload:hover {
+    box-shadow: 0 6px 15px rgba(0, 114, 255, 0.4);
+}
+
+/* =========================================
+   TABLES
+========================================= */
+
+.table thead {
+    background-color: #f4f7ff;
+}
+
+.table tbody tr:hover {
+    background-color: #f0f8ff;
+    transition: 0.3s;
+}
+
+/* =========================================
+   BADGES
+========================================= */
+
+.badge-active {
+    background: linear-gradient(90deg, #28a745, #20c997);
+    border-radius: 12px;
+    padding: 6px 12px;
+}
+
+.badge-expired {
+    background: linear-gradient(90deg, #dc3545, #ff6b6b);
+    border-radius: 12px;
+    padding: 6px 12px;
+}
+
+/* =========================================
+   DIVIDER
+========================================= */
+
+.divider {
+    text-align: center;
+    margin: 25px 0;
+    position: relative;
+}
+
+.divider::before,
+.divider::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    width: 40%;
+    height: 1px;
+    background: #ddd;
+}
+
+.divider::before { left: 0; }
+.divider::after { right: 0; }
+
+.divider span {
+    background: #fff;
+    padding: 0 10px;
+    color: #888;
+}
+
+/* =========================================
+   FOOTER
+========================================= */
+
+.footer {
+    background: #0f2027;
+    color: #ffffff;
+    padding: 20px 10px;
+    margin-top: 40px;
+}
+
+/* =========================================
+   ANIMATION
+========================================= */
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(15px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* =========================================
+   DARK MODE
+========================================= */
+
+body.dark-mode {
+    background: linear-gradient(135deg, #1e1e2f, #121212);
+    color: #e4e4e4;
+}
+
+body.dark-mode .navbar {
+    background: linear-gradient(90deg, #000000, #1f1f1f, #2c2c2c);
+}
+
+body.dark-mode .card,
+body.dark-mode .notice-card,
+body.dark-mode .student-card,
+body.dark-mode .admin-card,
+body.dark-mode .dept-card,
+body.dark-mode .profile-card {
+    background-color: #1e1e1e;
+    color: #ffffff;
+}
+
+body.dark-mode .form-control,
+body.dark-mode .form-select {
+    background-color: #2a2a2a;
+    color: #ffffff;
+    border: 1px solid #444;
+}
+
+body.dark-mode .table {
+    --bs-table-bg: #1e1e1e;
+    --bs-table-color: #ffffff;
+    --bs-table-border-color: #333;
+    --bs-table-striped-bg: #242424;
+    --bs-table-hover-bg: #2c2c2c;
+}
+
+body.dark-mode .badge.bg-light {
+    background-color: #333 !important;
+    color: #ffffff !important;
+}
+
+body.dark-mode .footer {
+    background: #000000;
+}
+
+body.dark-mode .text-muted {
+    color: #bbbbbb !important;
+}

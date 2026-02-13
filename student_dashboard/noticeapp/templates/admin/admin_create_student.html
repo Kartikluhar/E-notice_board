@@ -6,41 +6,45 @@
 {% endblock %}
 
 {% block content %}
-  <div class="row justify-content-center">
-    <div class="col-12 col-md-8 col-lg-6 col-xl-4">
-      <div class="card shadow-sm" style="background-color: white; border-top: 3px solid #00a2ff;">
-        <div class="card-body">
-          <h1 class="text-center mb-4" style="color:#004b87;">Create Student</h1>
+  <style>
+    
+  </style>
 
+  <div class="row justify-content-center py-4">
+    <div class="col-12 col-md-9 col-lg-7">
+      <div class="card student-card">
+        <div class="student-header text-center">
+          <h3 class="mb-1"><i class="bi bi-person-plus-fill"></i> Create Student</h3>
+          <small>Add a new student to the system</small>
+        </div>
+
+        <div class="card-body p-4">
+          <!-- Manual Student Form -->
           <form method="POST">
             {% csrf_token %}
 
-            <!-- Enrollment Number -->
             <div class="mb-3">
-              <label class="form-label">Enrollment Number</label>
+              <label class="form-label"><i class="bi bi-hash"></i> Enrollment Number</label>
               <input type="text" name="enrollment_no" class="form-control" placeholder="Enter enrollment number" required />
             </div>
-            <!-- Email -->
+
             <div class="mb-3">
-              <label class="form-label">Email</label>
-              <input type="email" name="email" class="form-control" placeholder="Enter actual Email" required />
+              <label class="form-label"><i class="bi bi-envelope"></i> Email</label>
+              <input type="email" name="email" class="form-control" placeholder="Enter actual email" required />
             </div>
 
-            <!-- Full Name -->
             <div class="mb-3">
-              <label class="form-label">Full Name</label>
+              <label class="form-label"><i class="bi bi-person"></i> Full Name</label>
               <input type="text" name="full_name" class="form-control" placeholder="Enter full name" required />
             </div>
 
-            <!-- Password -->
             <div class="mb-3">
-              <label class="form-label">Password</label>
+              <label class="form-label"><i class="bi bi-lock"></i> Password</label>
               <input type="password" name="password" class="form-control" placeholder="Enter password" required />
             </div>
 
-            <!-- Department -->
-            <div class="mb-4">
-              <label class="form-label">Department</label>
+            <div class="mb-3">
+              <label class="form-label"><i class="bi bi-building"></i> Department</label>
               <select name="department" class="form-select" required>
                 <option value="" disabled hidden selected>Select department</option>
                 {% for dept in departments %}
@@ -50,7 +54,7 @@
             </div>
 
             <div class="mb-4">
-              <label class="form-label">Semester</label>
+              <label class="form-label"><i class="bi bi-journal-bookmark"></i> Semester</label>
               <select name="sem" class="form-select" required>
                 <option value="" disabled hidden selected>Select semester</option>
                 {% for sem in semesters %}
@@ -59,9 +63,33 @@
               </select>
             </div>
 
-            <!-- Submit Button -->
             <div class="d-grid">
-              <button type="submit" class="btn btn-primary">Create Student</button>
+              <button type="submit" class="btn btn-create text-white"><i class="bi bi-check-circle"></i> Create Student</button>
+            </div>
+          </form>
+
+          <!-- Divider -->
+          <div class="divider mt-4">
+            <span>OR</span>
+          </div>
+
+          <!-- CSV Upload Section -->
+          <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            <div class="mb-3">
+              <label class="form-label">
+                <i class="bi bi-file-earmark-spreadsheet"></i>
+                Upload CSV File
+              </label>
+
+              <input type="file" name="csv_file" class="form-control" accept=".csv" />
+
+              <small class="text-muted">CSV must contain: enrollment_no, email, full_name, password, department_id, sem</small>
+            </div>
+
+            <div class="d-grid">
+              <button type="submit" class="btn btn-upload btn-custom text-white"><i class="bi bi-upload"></i> Upload CSV</button>
             </div>
           </form>
         </div>

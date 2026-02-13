@@ -6,112 +6,174 @@
 {% endblock %}
 
 {% block content %}
-  <div class="row justify-content-center py-5">
-    <div class="col-12 col-md-8 col-lg-6 col-xl-4">
-      <div
-        class="card shadow-sm"
-        style="background-color:white; border-top: 3px solid #00a2ff;"
-      >
-        <div class="card-body">
-          <h1 class="text-center mb-4" style="color:#004b87;">
-            Update Student
-          </h1>
 
-          <form method="POST">
-            {% csrf_token %}
+<style>
+  .student-card {
+    border-radius: 18px;
+    border: none;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+    animation: fadeIn 0.5s ease-in-out;
+  }
 
-            <!-- Enrollment Number -->
-            <div class="mb-3">
-              <label class="form-label">Enrollment Number</label>
-              <input
-                type="text"
-                name="enrollment_no"
-                class="form-control"
-                placeholder="Enter enrollment number"
-                value="{{ student.enrollment_no }}"
-                required
-              />
-            </div>
+  .student-header {
+    background: linear-gradient(90deg, #0f2027, #203a43, #2c5364);
+    color: white;
+    border-radius: 18px 18px 0 0;
+    padding: 20px;
+  }
 
-            <div class="mb-3">
-              <label class="form-label">Email</label>
-              <input
-                type="email"
-                name="email"
-                class="form-control"
-                placeholder="Enter email"
-                value="{{ student.email }}"
-                required
-              />
-            </div>
+  .form-control,
+  .form-select {
+    border-radius: 12px;
+    transition: 0.3s;
+  }
 
-            <!-- Full Name -->
-            <div class="mb-3">
-              <label class="form-label">Full Name</label>
-              <input
-                type="text"
-                name="full_name"
-                class="form-control"
-                placeholder="Enter full name"
-                value="{{ student.full_name }}"
-                required
-              />
-            </div>
+  .form-control:focus,
+  .form-select:focus {
+    border-color: #00c6ff;
+    box-shadow: 0 0 8px rgba(0, 198, 255, 0.5);
+  }
 
-            <!-- Password -->
-            <div class="mb-3">
-              <label class="form-label">Password</label>
-              <input
-                type="password"
-                name="password"
-                class="form-control"
-                placeholder="Enter password"
-                required
-              />
-            </div>
+  .btn-update {
+    background: linear-gradient(90deg, #00c6ff, #0072ff);
+    border: none;
+    border-radius: 25px;
+    padding: 8px;
+    font-weight: 500;
+    transition: 0.3s;
+  }
 
-            <!-- Department -->
-            <div class="mb-4">
-              <label class="form-label">Department</label>
-              <select name="department" class="form-select" required>
-                <option value="" disabled>
-                  Select department
+  .btn-update:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 15px rgba(0, 114, 255, 0.4);
+  }
+</style>
+
+<div class="row justify-content-center py-4">
+  <div class="col-12 col-md-9 col-lg-7">
+
+    <div class="card student-card">
+
+      <!-- Header -->
+      <div class="student-header text-center">
+        <h3 class="mb-1">
+          <i class="bi bi-person-gear"></i> Update Student
+        </h3>
+        <small>Modify student details below</small>
+      </div>
+
+      <div class="card-body p-4">
+
+        <form method="POST">
+          {% csrf_token %}
+
+          <!-- Enrollment Number -->
+          <div class="mb-3">
+            <label class="form-label">
+              <i class="bi bi-card-text"></i> Enrollment Number
+            </label>
+            <input
+              type="text"
+              name="enrollment_no"
+              class="form-control"
+              value="{{ student.enrollment_no }}"
+              required
+            />
+          </div>
+
+          <!-- Email -->
+          <div class="mb-3">
+            <label class="form-label">
+              <i class="bi bi-envelope"></i> Email
+            </label>
+            <input
+              type="email"
+              name="email"
+              class="form-control"
+              value="{{ student.email }}"
+              required
+            />
+          </div>
+
+          <!-- Full Name -->
+          <div class="mb-3">
+            <label class="form-label">
+              <i class="bi bi-person"></i> Full Name
+            </label>
+            <input
+              type="text"
+              name="full_name"
+              class="form-control"
+              value="{{ student.full_name }}"
+              required
+            />
+          </div>
+
+          <!-- Password -->
+          <div class="mb-3">
+            <label class="form-label">
+              <i class="bi bi-lock"></i> New Password
+              <span class="text-muted small">
+                (leave blank to keep current password)
+              </span>
+            </label>
+            <input
+              type="password"
+              name="password"
+              class="form-control"
+              placeholder="Enter new password"
+            />
+          </div>
+
+          <!-- Department -->
+          <div class="mb-3">
+            <label class="form-label">
+              <i class="bi bi-building"></i> Department
+            </label>
+            <select name="department" class="form-select" required>
+              <option value="" disabled>Select department</option>
+              {% for dept in departments %}
+                <option
+                  value="{{ dept.id }}"
+                  {% if dept.id == student.department.id %}selected{% endif %}
+                >
+                  {{ dept.d_name }}
                 </option>
-                {% for dept in departments %}
-                  <option
-                    value="{{ dept.id }}"
-                    {% if dept.id == student.department.id %}selected{% endif %}
-                  >
-                    {{ dept.d_name }}
-                  </option>
-                {% endfor %}
-              </select>
-            </div>
+              {% endfor %}
+            </select>
+          </div>
 
-            <div class="mb-4">
-              <label class="form-label">Semester</label>
-              <select name="sem" class="form-select" required>
-                <option value="" disabled hidden selected>Select semester</option>
-                {% for sem in semesters %}
-                  <option 
+          <!-- Semester -->
+          <div class="mb-4">
+            <label class="form-label">
+              <i class="bi bi-journal-bookmark"></i> Semester
+            </label>
+            <select name="sem" class="form-select" required>
+              <option value="" disabled>Select semester</option>
+              {% for sem in semesters %}
+                <option 
                   value="{{ sem }}"
                   {% if sem|stringformat:'s' == student.sem %}selected{% endif %}
-                  >
+                >
                   {{ sem }}
                 </option>
-                {% endfor %}
-              </select>
-            </div>
+              {% endfor %}
+            </select>
+          </div>
 
-            <!-- Submit Button -->
-            <div class="d-grid">
-              <button type="submit" class="btn btn-primary">
-                Update Student
-              </button>
-            </div>
-          </form>
-        </div>
+          <!-- Submit Button -->
+          <div class="d-grid">
+            <button type="submit" class="btn btn-update text-white">
+              <i class="bi bi-arrow-repeat"></i> Update Student
+            </button>
+          </div>
+
+        </form>
+
       </div>
     </div>
+
   </div>
+</div>
+
 {% endblock %}

@@ -6,57 +6,118 @@
 {% endblock %}
 
 {% block content %}
-  <section class="py-5">
-    <div class="container">
-      <div class="row justify-content-center">
-        <div class="col-md-8 col-lg-6">
-          <div class="card shadow-sm" style="border-top: 3px solid #00a2ff;">
-            <div class="card-body">
-              <h2 class="text-center mb-2" style="color:#004b87;">Add New Admin</h2>
-              <p class="text-center text-muted mb-4">Create a new administrator account</p>
 
-              <form method="POST">
-                {% csrf_token %}
+<style>
+  
+</style>
 
-                <!-- Username -->
-                <div class="mb-3">
-                  <label class="form-label">Username</label>
-                  <input type="text" name="username" class="form-control" placeholder="Enter username" required />
+<section class="py-4">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-md-9 col-lg-7">
+
+        <div class="card admin-card">
+
+          <div class="card-header-custom text-center">
+            <h3 class="mb-1">
+              <i class="bi bi-person-plus-fill"></i> Add New Admin
+            </h3>
+            <small>Create administrator manually or upload via CSV</small>
+          </div>
+
+          <div class="card-body p-4">
+
+            <!-- Manual Form -->
+            <form method="POST">
+              {% csrf_token %}
+
+              <div class="mb-3">
+                <label class="form-label">
+                  <i class="bi bi-person"></i> Username
+                </label>
+                <input type="text" name="username" class="form-control"
+                  placeholder="Enter username" required>
+              </div>
+
+              <div class="row">
+                <div class="col-md-6 mb-3">
+                  <label class="form-label">
+                    <i class="bi bi-person-badge"></i> First Name
+                  </label>
+                  <input type="text" name="fname" class="form-control"
+                    placeholder="Enter first name" required>
                 </div>
 
-                <!-- First Name -->
-                <div class="mb-3">
-                  <label class="form-label">First Name</label>
-                  <input type="text" name="fname" class="form-control" placeholder="Enter first name" required />
+                <div class="col-md-6 mb-3">
+                  <label class="form-label">
+                    <i class="bi bi-person-badge-fill"></i> Last Name
+                  </label>
+                  <input type="text" name="lname" class="form-control"
+                    placeholder="Enter last name" required>
                 </div>
+              </div>
 
-                <!-- Last Name -->
-                <div class="mb-3">
-                  <label class="form-label">Last Name</label>
-                  <input type="text" name="lname" class="form-control" placeholder="Enter last name" required />
-                </div>
+              <div class="mb-3">
+                <label class="form-label">
+                  <i class="bi bi-envelope"></i> Email
+                </label>
+                <input type="email" name="email" class="form-control"
+                  placeholder="Enter email address" required>
+              </div>
 
-                <!-- Email -->
-                <div class="mb-3">
-                  <label class="form-label">Email</label>
-                  <input type="email" name="email" class="form-control" placeholder="Enter email address" required />
-                </div>
+              <div class="mb-4">
+                <label class="form-label">
+                  <i class="bi bi-lock"></i> Password
+                </label>
+                <input type="password" name="password"
+                  class="form-control"
+                  placeholder="Create a password" required>
+              </div>
 
-                <!-- Password -->
-                <div class="mb-4">
-                  <label class="form-label">Password</label>
-                  <input type="password" name="password" class="form-control" placeholder="Create a password" required />
-                </div>
+              <div class="d-grid">
+                <button type="submit"
+                  class="btn btn-primary-custom btn-custom text-white">
+                  <i class="bi bi-check-circle"></i> Add Admin
+                </button>
+              </div>
+            </form>
 
-                <!-- Submit Button -->
-                <div class="d-grid">
-                  <button type="submit" class="btn btn-primary">Add Admin</button>
-                </div>
-              </form>
+            <!-- Divider -->
+            <div class="divider">
+              <span>OR</span>
             </div>
+
+            <!-- CSV Upload Section -->
+            <form method="POST" enctype="multipart/form-data">
+              {% csrf_token %}
+
+              <div class="mb-3">
+                <label class="form-label">
+                  <i class="bi bi-file-earmark-spreadsheet"></i>
+                  Upload CSV File
+                </label>
+                <input type="file" name="csv_file"
+                  class="form-control" accept=".csv">
+                <small class="text-muted">
+                  CSV must contain: username, first_name, last_name, email, password
+                </small>
+              </div>
+
+              <div class="d-grid">
+                <button type="submit"
+                  class="btn btn-upload btn-custom text-white">
+                  <i class="bi bi-upload"></i> Upload CSV
+                </button>
+              </div>
+
+            </form>
+
           </div>
         </div>
+
       </div>
     </div>
-  </section>
+  </div>
+</section>
+
 {% endblock %}

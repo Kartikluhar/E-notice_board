@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+{% comment %} student_profile.html {% endcomment %}
+
+{% block title %}
+  My Profile | E-Notice Board
+{% endblock %}
+
+{% block content %}
+
+<style>
+  
+</style>
+
+<div class="row justify-content-center py-5">
+  <div class="col-md-8 col-lg-6">
+
+    <div class="card profile-card">
+
+      <div class="profile-header">
+        <h4>
+          <i class="bi bi-person-badge"></i> My Profile
+        </h4>
+      </div>
+
+      <div class="card-body p-4">
+
+        <div class="mb-3">
+          <small class="text-muted">Full Name</small>
+          <p class="fw-semibold">{{ student.full_name }}</p>
+        </div>
+
+        <div class="mb-3">
+          <small class="text-muted">Enrollment Number</small>
+          <p class="fw-semibold">{{ student.enrollment_no }}</p>
+        </div>
+
+        <div class="mb-3">
+          <small class="text-muted">Email</small>
+          <p class="fw-semibold">{{ student.email }}</p>
+        </div>
+
+        <div class="mb-3">
+          <small class="text-muted">Department</small>
+          <p class="fw-semibold">{{ student.department.d_name }}</p>
+        </div>
+
+        <div class="mb-3">
+          <small class="text-muted">Semester</small>
+          <p class="fw-semibold">{{ student.sem|upper }}</p>
+        </div>
+
+        <div class="text-center mt-4">
+          <a href="{% url 'student_dboard' %}" class="btn btn-outline-primary">
+            ← Back to Dashboard
+          </a>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</div>
+
+{% endblock %}

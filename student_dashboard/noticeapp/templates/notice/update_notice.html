@@ -6,106 +6,125 @@
 {% endblock %}
 
 {% block content %}
-  <div class="row justify-content-center py-5">
-    <div class="col-12 col-sm-10 col-md-8 col-lg-6 col-xl-5">
-      <div
-        class="card shadow-sm"
-        style="background-color:white; border-top: 3px solid #00a2ff;"
-      >
-        <div class="card-body">
-          <h1 class="text-center mb-4" style="color:#004b87;">
-            Update Notice
-          </h1>
 
-          <form method="POST">
-            {% csrf_token %}
+<style>
+  
+</style>
 
-            <!-- Notice Title -->
-            <div class="mb-3">
-              <label class="form-label">Title</label>
-              <input
-                type="text"
-                name="title"
-                class="form-control"
-                placeholder="Enter notice title"
-                value="{{ notice.notice_title }}"
-                required
-              />
-            </div>
+<div class="row justify-content-center py-4">
+  <div class="col-12 col-md-9 col-lg-7">
 
-            <!-- Description -->
-            <div class="mb-3">
-              <label class="form-label">Description</label>
-              <textarea
-                name="description"
-                class="form-control"
-                rows="4"
-                placeholder="Write the notice description"
-                required
-              >{{ notice.notice_description }}</textarea>
-            </div>
+    <div class="card notice-card">
 
-            <div class="mb-3">
-              <label class="form-label">Attachments</label>
-              <textarea
-                name="attachment"
-                class="form-control"
-                rows="4"
-                placeholder="Write attachments link here: "
-              >{{ notice.notice_attachment }}</textarea>
-            </div>
+      <!-- Header -->
+      <div class="notice-header text-center">
+        <h3 class="mb-1">
+          <i class="bi bi-pencil-square"></i> Update Notice
+        </h3>
+        <small>Edit and update existing notice</small>
+      </div>
 
-            <!-- Department -->
-            <div class="mb-4">
-              <label class="form-label">Department</label>
-              <select name="department" class="form-select" required>
-                <option value="" disabled>Select department</option>
-                {% for dept in departments %}
-                  <option
-                    value="{{ dept.id }}"
-                    {% if dept.id == notice.department.id %}selected{% endif %}
-                  >
-                    {{ dept.d_name }}
-                  </option>
-                {% endfor %}
-              </select>
-            </div>
+      <div class="card-body p-4">
 
-            <div class="mb-4">
-              <label class="form-label">Semester</label>
-              <select name="sem" class="form-select" required>
-                <option value="" disabled hidden selected>Select semester</option>
-                {% for sem in semesters %}
-                  <option 
-                  value="{{ sem }}"
-                  {% if sem|stringformat:'s' == notice.sem %}selected{% endif %}
-                  >
-                  {{ sem }}
-                </option>
-                {% endfor %}
-              </select>
-            </div>
+        <form method="POST">
+          {% csrf_token %}
 
-            <div class="mb-3">
-              <label class="form-label">Expire Date</label>
-              <input
-                type="datetime-local"
-                name="expired_date"
-                class="form-control"
-                value="{{ notice.expired_date|date:'Y-m-d\\TH:i' }}"
-                required
-              />
+          <!-- Title -->
+          <div class="mb-3">
+            <label class="form-label">
+              <i class="bi bi-type"></i> Title
+            </label>
+            <input type="text"
+                   name="title"
+                   class="form-control"
+                   value="{{ notice.notice_title }}"
+                   required>
           </div>
 
-            <!-- Submit Button -->
-            <div class="d-grid">
-              <button type="submit" class="btn btn-primary">
-                Submit Notice
-              </button>
-            </div>
-          </form>
-        </div>
+          <!-- Description -->
+          <div class="mb-3">
+            <label class="form-label">
+              <i class="bi bi-card-text"></i> Description
+            </label>
+            <textarea name="description"
+                      class="form-control"
+                      rows="4"
+                      required>{{ notice.notice_description }}</textarea>
+          </div>
+
+          <!-- Attachments -->
+          <div class="mb-3">
+            <label class="form-label">
+              <i class="bi bi-paperclip"></i> Attachments
+            </label>
+            <textarea name="attachment"
+                      class="form-control"
+                      rows="2">{{ notice.notice_attachment }}</textarea>
+          </div>
+
+          <!-- Department -->
+          <div class="mb-3">
+            <label class="form-label">
+              <i class="bi bi-building"></i> Department
+            </label>
+            <select name="department" class="form-select" required>
+              {% for dept in departments %}
+                <option value="{{ dept.id }}"
+                  {% if dept.id == notice.department.id %}selected{% endif %}>
+                  {{ dept.d_name }}
+                </option>
+              {% endfor %}
+            </select>
+          </div>
+
+          <!-- Semester -->
+          <div class="mb-3">
+            <label class="form-label">
+              <i class="bi bi-journal-bookmark"></i> Semester
+            </label>
+            <select name="sem" class="form-select" required>
+              {% for sem in semesters %}
+                <option value="{{ sem }}"
+                  {% if sem|stringformat:'s' == notice.sem %}selected{% endif %}>
+                  {{ sem }}
+                </option>
+              {% endfor %}
+            </select>
+          </div>
+
+          <!-- Expire Date -->
+          <div class="mb-4">
+            <label class="form-label">
+              <i class="bi bi-calendar-event"></i> Expire Date
+            </label>
+            <input type="datetime-local"
+                   id="expireDate"
+                   name="expired_date"
+                   class="form-control"
+                   value="{{ notice.expired_date|date:'Y-m-d\\TH:i' }}"
+                   required>
+          </div>
+
+          <!-- Submit -->
+          <div class="d-grid">
+            <button type="submit" class="btn btn-update">
+              <i class="bi bi-check-circle"></i> Update Notice
+            </button>
+          </div>
+
+        </form>
+
       </div>
     </div>
+
   </div>
+</div>
+
+<!-- Prevent Past Date Selection -->
+<script>
+  const now = new Date();
+  now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+  document.getElementById("expireDate").min = now.toISOString().slice(0,16);
+</script>
+
 {% endblock %}

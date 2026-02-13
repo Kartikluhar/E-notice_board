@@ -12,8 +12,8 @@ from django.conf import settings
 from django.utils import timezone
 from django.utils.dateparse import parse_datetime
 
-
-password_validation = r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$'
+admin_validation = r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$'
+password_validation = r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{7,}$'
 email_validation = r'^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$'
 
 # user defined functions here.
@@ -67,7 +67,7 @@ def add_admin(request):
         elif not re.match(email_validation, email):
             messages.error(
                 request, "Enter valid email")
-        elif not re.match(password_validation, password):
+        elif not re.match(admin_validation, password):
             messages.error(
                 request, "password must contain 1 uppercase, 1 lowercase, 1 speacial character, and contain atleast 8 letter")
         elif username == "" or first_name == "" or last_name == "" or email == "" or password == "":
@@ -89,8 +89,6 @@ def add_admin(request):
 def admin_dboard(request):
     notices = Notice.objects.select_related(
         'department').all().order_by('-created_at')
-    students = Students.objects.all()
-    departments = Department.objects.all()
 
     # 🔍 Filters
     search = request.GET.get('search')
@@ -114,16 +112,13 @@ def admin_dboard(request):
         notices = notices.filter(expired_date__lte=now)
 
     lengths = {
-        'notice_len': Notice.objects.count(),
-        'student_len': Students.objects.count(),
-        'department_len': Department.objects.count()
+        'notice_len': Notice.objects.count()
     }
 
-    return render(request, 'admin/admin_dboard.html', {
+    return render(request, 'notice/notice_list.html', {
         'notices': notices,
-        'departments': departments,
         'lengths': lengths,
-        'now': timezone.now() 
+        'now': timezone.now()
     })
 
 
@@ -415,6 +410,42 @@ def update_notice(request, pk):
         'semesters': semesters
     })
 
+
+@login_required(login_url='admin_login')
+def notice_list(request):
+    notices = Notice.objects.select_related(
+        'department').all().order_by('-created_at')
+
+    # 🔍 Filters
+    search = request.GET.get('search')
+    department = request.GET.get('department')
+    sem = request.GET.get('sem')
+    status = request.GET.get('status')   # 👈 NEW
+
+    if search:
+        notices = notices.filter(notice_title__icontains=search)
+
+    if department:
+        notices = notices.filter(department_id=department)
+
+    if sem:
+        notices = notices.filter(sem=sem)
+
+    now = timezone.now()
+    if status == 'active':
+        notices = notices.filter(expired_date__gt=now)
+    elif status == 'expired':
+        notices = notices.filter(expired_date__lte=now)
+
+    lengths = {
+        'notice_len': Notice.objects.count()
+    }
+
+    return render(request, 'notice/notice_list.html', {
+        'notices': notices,
+        'lengths': lengths,
+        'now': timezone.now()
+    })
 # ====================================================================================
 # create, update, delete student
 # ====================================================================================
@@ -437,6 +468,16 @@ def add_student(request):
             if Students.objects.filter(enrollment_no=enrollment_no).exists():
                 messages.error(
                     request, "Student already exist with this enrollment no !!")
+
+            elif not re.match(password_validation, password):
+                messages.error(
+                    request,
+                    "Password must contain 1 uppercase, 1 lowercase, 1 number, 1 special character and minimum 7 characters."
+                )
+
+            elif enrollment_no == "" or full_name == "" or email == "" or password == "":
+                messages.error(request, "Fields cannot be empty!")
+
             else:
 
                 dept = Department.objects.get(id=department_id)
@@ -483,7 +524,16 @@ def update_student(request, pk):
             sem = request.POST.get('sem')
 
             student.enrollment_no = enrollment_no
-            student.password = make_password(password=password)
+            if password:
+                if not re.match(password_validation, password):
+                    messages.error(
+                        request,
+                        "Password must contain 1 uppercase, 1 lowercase, 1 number, 1 special character and minimum 7 characters."
+                    )
+                    return redirect('update_student', pk=pk)
+
+                student.password = make_password(password)
+
             student.full_name = full_name
             student.email = email
             student.department = dept
@@ -523,6 +573,7 @@ def delete_student(request, pk):
 def student_list(request):
     students = Students.objects.all()
     departments = Department.objects.all()
+    student_count = students.count()
 
     search = request.GET.get('search')
     department = request.GET.get('department')
@@ -544,6 +595,7 @@ def student_list(request):
     context = {
         'students': students,
         'departments': departments,
+        'total_students': student_count
     }
 
     return render(request, 'admin/admin_list_student.html', context)
@@ -557,27 +609,26 @@ def student_list(request):
 def student_login(request):
     if 'student' in request.session:
         return render(request, 'student/student_dboard.html')
-    else:
-        if request.method == 'POST':
-            try:
-                enrollment_no = request.POST.get('enrollment_no')
-                password = request.POST.get('password')
-                student = Students.objects.get(enrollment_no=enrollment_no)
-                student_pass = student.password
-                if student:
-                    if check_password(password=password, encoded=student_pass):
-                        request.session['student'] = student.id
-                        request.session['is_student_logged_in'] = True
-                        messages.success(request, "Logged in successfully!")
-                        return redirect('student_dboard')
-                    else:
-                        messages.warning(request, "Enter correct password!")
-                else:
-                    messages.error(
-                        request, "Student not found enter correct enrollment.")
-            except Exception as e:
-                print(e)
-        return render(request, 'student/student_login.html')
+
+    if request.method == 'POST':
+        enrollment_no = request.POST.get('enrollment_no')
+        password = request.POST.get('password')
+
+        try:
+            student = Students.objects.get(enrollment_no=enrollment_no)
+
+            if check_password(password, student.password):
+                request.session['student'] = student.id
+                request.session['is_student_logged_in'] = True
+                messages.success(request, "Logged in successfully!")
+                return redirect('student_dboard')
+            else:
+                messages.error(request, "Wrong password!")
+
+        except Students.DoesNotExist:
+            messages.error(request, "Invalid enrollment number!")
+
+    return render(request, 'student/student_login.html')
 
 
 def student_dboard(request):

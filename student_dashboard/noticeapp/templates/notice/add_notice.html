@@ -1,71 +1,128 @@
 {% extends 'base.html' %}
-{% comment %}add_notice.html{% endcomment %}
+{% comment %} add_notice.html {% endcomment %}
 
 {% block title %}
   Add Notice | E-Notice Board
 {% endblock %}
 
 {% block content %}
-  <div class="row justify-content-center py-5">
-    <div class="col-12 col-sm-10 col-md-8 col-lg-6 col-xl-5">
-      <div class="card shadow-sm" style="background-color:white; border-top: 3px solid #00a2ff;">
-        <div class="card-body">
-          <h1 class="text-center mb-4" style="color:#004b87;">Create Notice</h1>
 
-          <form method="POST">
-            {% csrf_token %}
+<style>
+  
+</style>
 
-            <!-- Notice Title -->
-            <div class="mb-3">
-              <label class="form-label">Title</label>
-              <input type="text" name="title" class="form-control" placeholder="Enter notice title" required />
-            </div>
+<div class="row justify-content-center py-4">
+  <div class="col-12 col-md-9 col-lg-7">
 
-            <!-- Description -->
-            <div class="mb-3">
-              <label class="form-label">Description</label>
-              <textarea name="description" class="form-control" rows="4" placeholder="Write the notice description" required></textarea>
-            </div>
+    <div class="card notice-card">
 
-            <div class="mb-3">
-              <label class="form-label">Attachments</label>
-              <textarea name="attachment" class="form-control" rows="4" placeholder="Give Attachments link here: "></textarea>
-            </div>
+      <!-- Header -->
+      <div class="notice-header text-center">
+        <h3 class="mb-1">
+          <i class="bi bi-megaphone-fill"></i> Create Notice
+        </h3>
+        <small>Publish a new notice to students</small>
+      </div>
 
-            <!-- Department -->
-            <div class="mb-4">
-              <label class="form-label">Department</label>
-              <select name="department" class="form-select" required>
-                <option value="" hidden disabled selected>Select department</option>
-                {% for dept in departments %}
-                  <option value="{{ dept.id }}">{{ dept.d_name }}</option>
-                {% endfor %}
-              </select>
-            </div>
+      <div class="card-body p-4">
 
-            <div class="mb-4">
-              <label class="form-label">Semester</label>
-              <select name="sem" class="form-select" required>
-                <option value="" disabled hidden selected>Select semester</option>
-                {% for sem in semesters %}
-                  <option value="{{ sem }}">{{ sem }}</option>
-                {% endfor %}
-                <option value="all">Every One</option>
-              </select>
-            </div>
+        <form method="POST">
+          {% csrf_token %}
 
-            <div class="mb-3">
-              <label class="form-label">Expire Date</label>
-              <input type="datetime-local" name="expired_date" class="form-control" required />
-            </div>
+          <!-- Notice Title -->
+          <div class="mb-3">
+            <label class="form-label">
+              <i class="bi bi-type"></i> Title
+            </label>
+            <input type="text"
+                   name="title"
+                   class="form-control"
+                   placeholder="Enter notice title"
+                   required>
+          </div>
 
-            <!-- Submit Button -->
-            <div class="d-grid">
-              <button type="submit" class="btn btn-primary">Create Notice & Send email to Students</button>
-            </div>
-          </form>
-        </div>
+          <!-- Description -->
+          <div class="mb-3">
+            <label class="form-label">
+              <i class="bi bi-card-text"></i> Description
+            </label>
+            <textarea name="description"
+                      class="form-control"
+                      rows="4"
+                      placeholder="Write the notice description"
+                      required></textarea>
+          </div>
+
+          <!-- Attachments -->
+          <div class="mb-3">
+            <label class="form-label">
+              <i class="bi bi-paperclip"></i> Attachments
+            </label>
+            <textarea name="attachment"
+                      class="form-control"
+                      rows="2"
+                      placeholder="Give attachment link here"></textarea>
+          </div>
+
+          <!-- Department -->
+          <div class="mb-3">
+            <label class="form-label">
+              <i class="bi bi-building"></i> Department
+            </label>
+            <select name="department" class="form-select" required>
+              <option value="" hidden disabled selected>Select department</option>
+              {% for dept in departments %}
+                <option value="{{ dept.id }}">{{ dept.d_name }}</option>
+              {% endfor %}
+            </select>
+          </div>
+
+          <!-- Semester -->
+          <div class="mb-3">
+            <label class="form-label">
+              <i class="bi bi-journal-bookmark"></i> Semester
+            </label>
+            <select name="sem" class="form-select" required>
+              <option value="" disabled hidden selected>Select semester</option>
+              {% for sem in semesters %}
+                <option value="{{ sem }}">{{ sem }}</option>
+              {% endfor %}
+              <option value="all">Every One</option>
+            </select>
+          </div>
+
+          <!-- Expire Date -->
+          <div class="mb-4">
+            <label class="form-label">
+              <i class="bi bi-calendar-event"></i> Expire Date
+            </label>
+            <input type="datetime-local"
+                   id="expireDate"
+                   name="expired_date"
+                   class="form-control"
+                   required>
+          </div>
+
+          <!-- Submit -->
+          <div class="d-grid">
+            <button type="submit" class="btn btn-create">
+              <i class="bi bi-send"></i> Create Notice & Send Email
+            </button>
+          </div>
+
+        </form>
+
       </div>
     </div>
+
   </div>
+</div>
+
+<!-- Prevent Past Date Selection -->
+<script>
+  const now = new Date();
+  now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+  document.getElementById("expireDate").min = now.toISOString().slice(0,16);
+</script>
+
 {% endblock %}

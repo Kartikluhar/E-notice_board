@@ -1,66 +1,114 @@
 {% extends 'base.html' %}
-{% comment %}edit_admin.html{% endcomment %}
+{% comment %} edit_admin.html {% endcomment %}
 
 {% block title %}
   Edit Admin | E-Notice Board
 {% endblock %}
 
 {% block content %}
-  <section class="py-5">
-    <div class="container">
-      <div class="row justify-content-center">
-        <div class="col-md-8 col-lg-6">
-          <div class="card shadow-sm" style="border-top: 3px solid #00a2ff;">
-            <div class="card-body">
-              <h2 class="text-center mb-2" style="color:#004b87;">Edit Admin</h2>
-              <p class="text-center text-muted mb-4">Update administrator details</p>
 
-              <form method="POST">
-                {% csrf_token %}
+<style>
+  
+</style>
 
-                <!-- Username (Read-only recommended) -->
-                <div class="mb-3">
-                  <label class="form-label">Username</label>
-                  <input type="text" name="username" class="form-control" value="{{ admin.username }}" readonly />
-                </div>
+<div class="row justify-content-center py-4">
+  <div class="col-12 col-md-9 col-lg-7">
 
-                <!-- First Name -->
-                <div class="mb-3">
-                  <label class="form-label">First Name</label>
-                  <input type="text" name="fname" class="form-control" value="{{ admin.first_name }}" required />
-                </div>
+    <div class="card admin-card">
 
-                <!-- Last Name -->
-                <div class="mb-3">
-                  <label class="form-label">Last Name</label>
-                  <input type="text" name="lname" class="form-control" value="{{ admin.last_name }}" required />
-                </div>
+      <!-- Header -->
+      <div class="admin-header text-center">
+        <h3 class="mb-1">
+          <i class="bi bi-person-lines-fill"></i> Edit Admin
+        </h3>
+        <small>Update administrator details</small>
+      </div>
 
-                <!-- Email -->
-                <div class="mb-3">
-                  <label class="form-label">Email</label>
-                  <input type="email" name="email" class="form-control" value="{{ admin.email }}" required />
-                </div>
+      <div class="card-body p-4">
 
-                <!-- Password (Optional) -->
-                <div class="mb-4">
-                  <label class="form-label">
-                    New Password
-                    <span class="text-muted small">(leave blank to keep current password)</span>
-                  </label>
-                  <input type="password" name="password" class="form-control" placeholder="Enter new password" />
-                </div>
+        <form method="POST">
+          {% csrf_token %}
 
-                <!-- Action Buttons -->
-                <div class="d-flex gap-3">
-                  <button type="submit" class="btn btn-primary w-100">Update Admin</button>
-                  <a href="{% url 'admin_list' %}" class="btn btn-outline-secondary w-100">Cancel</a>
-                </div>
-              </form>
-            </div>
+          <!-- Username -->
+          <div class="mb-3">
+            <label class="form-label">
+              <i class="bi bi-person"></i> Username
+            </label>
+            <input type="text"
+                   name="username"
+                   class="form-control bg-light"
+                   value="{{ admin.username }}"
+                   readonly>
           </div>
-        </div>
+
+          <!-- First Name -->
+          <div class="mb-3">
+            <label class="form-label">
+              <i class="bi bi-person-badge"></i> First Name
+            </label>
+            <input type="text"
+                   name="fname"
+                   class="form-control"
+                   value="{{ admin.first_name }}"
+                   required>
+          </div>
+
+          <!-- Last Name -->
+          <div class="mb-3">
+            <label class="form-label">
+              <i class="bi bi-person-badge-fill"></i> Last Name
+            </label>
+            <input type="text"
+                   name="lname"
+                   class="form-control"
+                   value="{{ admin.last_name }}"
+                   required>
+          </div>
+
+          <!-- Email -->
+          <div class="mb-3">
+            <label class="form-label">
+              <i class="bi bi-envelope"></i> Email
+            </label>
+            <input type="email"
+                   name="email"
+                   class="form-control"
+                   value="{{ admin.email }}"
+                   required>
+          </div>
+
+          <!-- Password -->
+          <div class="mb-4">
+            <label class="form-label">
+              <i class="bi bi-lock"></i> New Password
+              <span class="text-muted small">
+                (leave blank to keep current password)
+              </span>
+            </label>
+            <input type="password"
+                   name="password"
+                   class="form-control"
+                   placeholder="Enter new password">
+          </div>
+
+          <!-- Buttons -->
+          <div class="d-flex gap-3">
+            <button type="submit" class="btn btn-update text-white w-100">
+              <i class="bi bi-check-circle"></i> Update Admin
+            </button>
+
+            <a href="{% url 'admin_list' %}"
+               class="btn btn-outline-secondary btn-cancel w-100">
+              <i class="bi bi-x-circle"></i> Cancel
+            </a>
+          </div>
+
+        </form>
+
       </div>
     </div>
-  </section>
+
+  </div>
+</div>
+
 {% endblock %}

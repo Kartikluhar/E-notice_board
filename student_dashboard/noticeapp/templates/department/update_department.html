@@ -6,55 +6,70 @@
 {% endblock %}
 
 {% block content %}
-  <div class="row justify-content-center py-5">
-    <div class="col-12 col-sm-10 col-md-8 col-lg-5 col-xl-4">
-      <div
-        class="card shadow-sm"
-        style="background-color:white; border-top: 3px solid #00a2ff;"
-      >
-        <div class="card-body">
-          <h1 class="text-center mb-4" style="color:#004b87;">
-            Update Department
-          </h1>
 
-          <form method="POST">
-            {% csrf_token %}
+<style>
+  
+</style>
 
-            <!-- Department Name -->
-            <div class="mb-3">
-              <label class="form-label">Department Name</label>
-              <input
-                type="text"
-                name="dept_name"
-                class="form-control"
-                placeholder="Enter department name"
-                value="{{ department.d_name }}"
-                required
-              />
-            </div>
+<div class="row justify-content-center py-4">
+  <div class="col-12 col-md-9 col-lg-6">
 
-            <!-- Department Code -->
-            <div class="mb-4">
-              <label class="form-label">Department Code</label>
-              <input
-                type="text"
-                name="dept_code"
-                class="form-control"
-                placeholder="Enter department code"
-                value="{{ department.d_code }}"
-                required
-              />
-            </div>
+    <div class="card dept-card">
 
-            <!-- Submit Button -->
-            <div class="d-grid">
-              <button type="submit" class="btn btn-primary">
-                Update Department
-              </button>
-            </div>
-          </form>
-        </div>
+      <!-- Header -->
+      <div class="dept-header text-center">
+        <h3 class="mb-1">
+          <i class="bi bi-building-gear"></i> Update Department
+        </h3>
+        <small>Edit department details</small>
+      </div>
+
+      <div class="card-body p-4">
+
+        <form method="POST">
+          {% csrf_token %}
+
+          <!-- Department Name -->
+          <div class="mb-3">
+            <label class="form-label">
+              <i class="bi bi-diagram-3"></i> Department Name
+            </label>
+            <input
+              type="text"
+              name="dept_name"
+              class="form-control"
+              value="{{ department.d_name }}"
+              required
+            />
+          </div>
+
+          <!-- Department Code -->
+          <div class="mb-4">
+            <label class="form-label">
+              <i class="bi bi-hash"></i> Department Code
+            </label>
+            <input
+              type="text"
+              name="dept_code"
+              class="form-control"
+              value="{{ department.d_code }}"
+              required
+            />
+          </div>
+
+          <!-- Submit Button -->
+          <div class="d-grid">
+            <button type="submit" class="btn btn-update text-white">
+              <i class="bi bi-arrow-repeat"></i> Update Department
+            </button>
+          </div>
+
+        </form>
+
       </div>
     </div>
+
   </div>
+</div>
+
 {% endblock %}

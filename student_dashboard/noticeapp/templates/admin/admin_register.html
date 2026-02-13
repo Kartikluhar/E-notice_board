@@ -6,101 +6,118 @@
 {% endblock %}
 
 {% block content %}
-  <div class="row justify-content-center py-5">
-    <div class="col-12 col-sm-10 col-md-8 col-lg-5 col-xl-4">
-      <div
-        class="card shadow-sm"
-        style="background-color:white; border-top: 3px solid #00a2ff;"
-      >
-        <div class="card-body">
-          <h1 class="text-center mb-4" style="color:#004b87;">
-            Create Account
-          </h1>
+<div class="row justify-content-center align-items-center" style="min-height:80vh;">
+  <div class="col-12 col-sm-10 col-md-8 col-lg-6 col-xl-5">
 
-          <form method="POST">
-            {% csrf_token %}
+    <div class="card border-0 shadow" style="border-radius:18px;">
 
-            <!-- Username -->
-            <div class="mb-3">
-              <label class="form-label">Username</label>
-              <input
-                type="text"
-                name="username"
-                class="form-control"
-                placeholder="Choose a username"
-                required
-              />
-            </div>
+      <!-- Header -->
+      <div class="text-center pt-4">
+        <i class="bi bi-person-plus-fill" style="font-size:2.5rem; color:#00a2ff;"></i>
+        <h2 class="mt-2 fw-bold" style="color:#203a43;">
+          Create Admin Account
+        </h2>
+        <p class="text-muted small">
+          Register a new administrator for E-Notice Board
+        </p>
+      </div>
 
-            <!-- Email -->
-            <div class="mb-3">
-              <label class="form-label">Email</label>
-              <input
-                type="email"
-                name="email"
-                class="form-control"
-                placeholder="Enter your email"
-                required
-              />
-            </div>
+      <div class="card-body px-4 pb-4">
 
-            <!-- First Name -->
-            <div class="mb-3">
-              <label class="form-label">First Name</label>
+        <form method="POST">
+          {% csrf_token %}
+
+          <!-- Username -->
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Username</label>
+            <input
+              type="text"
+              name="username"
+              class="form-control"
+              placeholder="Choose a username"
+              required
+              style="border-radius:12px;"
+            />
+          </div>
+
+          <!-- Email -->
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Email</label>
+            <input
+              type="email"
+              name="email"
+              class="form-control"
+              placeholder="Enter your email"
+              required
+              style="border-radius:12px;"
+            />
+          </div>
+
+          <!-- Name Row -->
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label class="form-label fw-semibold">First Name</label>
               <input
                 type="text"
                 name="fname"
                 class="form-control"
-                placeholder="Enter your first name"
+                placeholder="First name"
                 required
+                style="border-radius:12px;"
               />
             </div>
 
-            <!-- Last Name -->
-            <div class="mb-3">
-              <label class="form-label">Last Name</label>
+            <div class="col-md-6 mb-3">
+              <label class="form-label fw-semibold">Last Name</label>
               <input
                 type="text"
                 name="lname"
                 class="form-control"
-                placeholder="Enter your last name"
+                placeholder="Last name"
                 required
+                style="border-radius:12px;"
               />
             </div>
+          </div>
 
-            <!-- Password -->
-            <div class="mb-3">
-              <label class="form-label">Password</label>
-              <input
-                type="password"
-                name="password1"
-                class="form-control"
-                placeholder="Enter password"
-                required
-              />
-            </div>
+          <!-- Password -->
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Password</label>
+            <input
+              type="password"
+              name="password1"
+              class="form-control"
+              placeholder="Enter password"
+              required
+              style="border-radius:12px;"
+            />
+          </div>
 
-            <!-- Confirm Password -->
-            <div class="mb-4">
-              <label class="form-label">Confirm Password</label>
-              <input
-                type="password"
-                name="password2"
-                class="form-control"
-                placeholder="Re-enter password"
-                required
-              />
-            </div>
+          <!-- Confirm Password -->
+          <div class="mb-4">
+            <label class="form-label fw-semibold">Confirm Password</label>
+            <input
+              type="password"
+              name="password2"
+              class="form-control"
+              placeholder="Re-enter password"
+              required
+              style="border-radius:12px;"
+            />
+          </div>
 
-            <!-- Submit -->
-            <div class="d-grid">
-              <button type="submit" class="btn btn-primary">
-                Create Admin
-              </button>
-            </div>
-          </form>
-        </div>
+          <!-- Submit -->
+          <div class="d-grid">
+            <button type="submit" class="btn btn-outline-primary">
+              <i class="bi bi-check-circle"></i> Create Admin
+            </button>
+          </div>
+
+        </form>
+
       </div>
     </div>
+
   </div>
+</div>
 {% endblock %}

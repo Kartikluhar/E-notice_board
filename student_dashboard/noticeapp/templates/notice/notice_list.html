@@ -1,0 +1,177 @@
+{% extends 'base.html' %}
+{% comment %}notice_list.html{% endcomment %}
+
+{% block title %}
+  All Notices | E-Notice Board
+{% endblock %}
+
+{% block content %}
+
+<div class="container py-4">
+
+  <!-- Main Heading -->
+  <div class="text-center mb-4">
+    <h2 class="fw-bold">
+      <i class="bi bi-megaphone-fill"></i> E-Notice Board
+    </h2>
+    <p class="text-muted">Manage and view all published notices</p>
+  </div>
+
+  <!-- Filter Section -->
+  <div class="card mb-4 shadow-sm">
+    <div class="card-body">
+      <form method="get" class="row g-3 align-items-end">
+
+        <!-- Search -->
+        <div class="col-md-4">
+          <label class="form-label small text-muted">Search Notice</label>
+          <input type="text"
+                 name="search"
+                 class="form-control"
+                 placeholder="Enter notice title..."
+                 value="{{ request.GET.search }}">
+        </div>
+
+        <!-- Department -->
+        <div class="col-md-3">
+          <label class="form-label small text-muted">Department</label>
+          <select name="department" class="form-select">
+            <option value="">All Departments</option>
+            {% for dept in departments %}
+              <option value="{{ dept.id }}"
+                {% if request.GET.department == dept.id|stringformat:"s" %}selected{% endif %}>
+                {{ dept.d_name }}
+              </option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <!-- Semester -->
+        <div class="col-md-2">
+          <label class="form-label small text-muted">Semester</label>
+          <select name="sem" class="form-select">
+            <option value="">All</option>
+            {% for i in "12345678" %}
+              <option value="{{ i }}" {% if request.GET.sem == i %}selected{% endif %}>
+                Sem {{ i }}
+              </option>
+            {% endfor %}
+            <option value="all" {% if request.GET.sem == "all" %}selected{% endif %}>
+              Everyone
+            </option>
+          </select>
+        </div>
+
+        <!-- Status -->
+        <div class="col-md-1">
+          <label class="form-label small text-muted">Status</label>
+          <select name="status" class="form-select">
+            <option value="">All</option>
+            <option value="active" {% if request.GET.status == "active" %}selected{% endif %}>Active</option>
+            <option value="expired" {% if request.GET.status == "expired" %}selected{% endif %}>Expired</option>
+          </select>
+        </div>
+
+        <!-- Buttons -->
+        <div class="col-md-1 d-flex gap-2">
+
+  <button type="submit" class="btn btn-primary">
+    <i class="bi bi-funnel-fill"></i>
+  </button>
+
+  <a href="{% url 'admin_dboard' %}" class="btn btn-outline-secondary">
+    <i class="bi bi-arrow-clockwise"></i>
+  </a>
+</div>
+
+
+
+      </form>
+    </div>
+  </div>
+
+  <!-- Notice Card -->
+  <!-- Notice Card -->
+<div class="card notice-card shadow-sm">
+
+  <!-- Header -->
+  <div class="notice-header d-flex justify-content-between align-items-center p-3">
+    <h5 class="mb-0 d-flex align-items-center gap-2">
+      <i class="bi bi-list-ul"></i> All Notices
+      <span class="badge bg-light text-dark rounded-pill">
+        {{ lengths.notice_len }}
+      </span>
+    </h5>
+
+    <a href="{% url 'add_notice' %}" class="btn btn-gradient">
+      <i class="bi bi-plus-circle"></i> Add New Notice
+    </a>
+  </div>
+
+  <!-- Table -->
+  <div class="table-responsive p-3">
+    <table class="table table-hover align-middle mb-0">
+
+      <thead>
+        <tr>
+          <th>Title</th>
+          <th>Department</th>
+          <th>Sem</th>
+          <th>Created</th>
+          <th>Status</th>
+          <th class="text-center">Actions</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        {% for notice in notices %}
+        <tr>
+          <td>{{ notice.notice_title }}</td>
+          <td>{{ notice.department.d_name }}</td>
+          <td>{{ notice.sem|upper }}</td>
+          <td>{{ notice.created_at|date:'d M Y' }}</td>
+
+          <td>
+            {% if notice.expired_date <= now %}
+              <span class="badge bg-danger">
+                <i class="bi bi-x-circle"></i> Expired
+              </span>
+            {% else %}
+              <span class="badge bg-success">
+                <i class="bi bi-check-circle"></i> Active
+              </span>
+            {% endif %}
+          </td>
+
+          <td class="text-center">
+            <a href="{% url 'update_notice' notice.id %}"
+               class="btn btn-sm btn-outline-primary me-2">
+              <i class="bi bi-pencil"></i>
+            </a>
+
+            <a href="{% url 'delete_notice' notice.id %}"
+               class="btn btn-sm btn-outline-danger">
+              <i class="bi bi-trash"></i>
+            </a>
+          </td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="6" class="text-center py-4 text-muted">
+            <i class="bi bi-inbox"></i> No notices available.
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+
+    </table>
+  </div>
+
+</div>
+
+
+</div>
+
+{% endblock %}
+
+

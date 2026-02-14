@@ -9,6 +9,7 @@ urlpatterns = [
     path('admin-list/',views.admin_list, name='admin_list'),
     path('edit-admin/<int:pk>/', views.edit_admin, name='edit_admin'),
     path('delete-admin/<int:pk>',views.delete_admin, name='delete_admin'),
+    path('admin-profile/', views.admin_profile, name='admin_profile'),
 
     path('add-department/', views.add_department, name='add_department'),
     path('department-list/', views.department_list, name='department_list'),
@@ -26,6 +27,7 @@ urlpatterns = [
 
     path('', views.student_dboard, name='student_dboard'),
     path('student-list/', views.student_list, name='student_list'),
+    path('student-profile/',views.student_profile, name='student_profile'),
     path('student-login/',views.student_login, name='student_login'),
     path('student-logout/',views.student_logout, name='student_logout'),
     path('notice-detail/<int:pk>',views.student_detail, name='notice_detail')

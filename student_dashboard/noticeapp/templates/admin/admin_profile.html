@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+{% comment %} admin_profile.html {% endcomment %}
+
+{% block title %}
+  Admin Profile | E-Notice Board
+{% endblock %}
+
+{% block content %}
+
+<div class="row justify-content-center py-5">
+  <div class="col-md-8 col-lg-6">
+
+    <div class="card profile-card">
+
+      <div class="profile-header">
+        <h4>
+          <i class="bi bi-person-gear"></i> Admin Profile
+        </h4>
+      </div>
+
+      <div class="card-body p-4">
+
+        <div class="mb-3">
+          <small class="text-muted">Username</small>
+          <p class="fw-semibold">{{ request.user.username }}</p>
+        </div>
+
+        <div class="mb-3">
+          <small class="text-muted">Full Name</small>
+          <p class="fw-semibold">
+            {{ request.user.first_name }} {{ request.user.last_name }}
+          </p>
+        </div>
+
+        <div class="mb-3">
+          <small class="text-muted">Email</small>
+          <p class="fw-semibold">{{ request.user.email }}</p>
+        </div>
+
+        <div class="mb-3">
+          <small class="text-muted">Role</small>
+          <p class="fw-semibold">
+            {% if request.user.is_superuser %}
+              Super Admin
+            {% elif request.user.is_staff %}
+              Staff Admin
+            {% else %}
+              Admin
+            {% endif %}
+          </p>
+        </div>
+
+        <div class="mb-3">
+          <small class="text-muted">Joined On</small>
+          <p class="fw-semibold">
+            {{ request.user.date_joined|date:"d M Y" }}
+          </p>
+        </div>
+
+        <div class="text-center mt-4">
+          <a href="{% url 'notice_list' %}" class="btn btn-outline-primary">
+            ← Back to Notices
+          </a>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</div>
+
+{% endblock %}

@@ -75,7 +75,7 @@
               </div>
 
               <div class="d-grid">
-                <button type="submit"
+                <button type="submit" name="single_admin"
                   class="btn btn-primary-custom btn-custom text-white">
                   <i class="bi bi-check-circle"></i> Add Admin
                 </button>
@@ -97,14 +97,14 @@
                   Upload CSV File
                 </label>
                 <input type="file" name="csv_file"
-                  class="form-control" accept=".csv">
+                  class="form-control" accept=".csv" required>
                 <small class="text-muted">
                   CSV must contain: username, first_name, last_name, email, password
                 </small>
               </div>
 
               <div class="d-grid">
-                <button type="submit"
+                <button type="submit" name="csv_admin"
                   class="btn btn-upload btn-custom text-white">
                   <i class="bi bi-upload"></i> Upload CSV
                 </button>

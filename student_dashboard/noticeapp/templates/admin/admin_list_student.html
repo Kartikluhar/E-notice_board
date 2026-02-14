@@ -30,11 +30,25 @@
 
     <!-- Top Buttons -->
     <div class="d-flex flex-wrap justify-content-center gap-3 mb-4">
-      <a href="{% url 'add_student' %}"
-        class="btn btn-primary btn-custom text-white">
-        <i class="bi bi-person-plus"></i> Add New Student
-      </a>
-    </div>
+
+  <a href="{% url 'add_student' %}"
+     class="btn btn-primary btn-custom text-white">
+    <i class="bi bi-person-plus"></i> Add New Student
+  </a>
+
+  {% if students %}
+
+    <!-- Delete All Students -->
+    <a href="{% url 'delete_all_students' %}"
+       class="btn btn-outline-danger btn-custom"
+       onclick="return confirm('This will delete ALL students. Are you sure?')">
+      <i class="bi bi-trash3-fill"></i> Delete All
+    </a>
+
+  {% endif %}
+
+</div>
+
 
     <!-- Filter Card -->
     <div class="card filter-card mb-4">

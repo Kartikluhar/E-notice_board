@@ -307,6 +307,12 @@ def update_department(request, pk):
         'department': department
     })
 
+@login_required(login_url='admin_login')
+def delete_all_departments(request):
+    Department.objects.all().delete()
+    messages.success(request, "All departments deleted successfully!")
+    return redirect('department_list')
+
 # ====================================================================================
 # create update delete notice
 # ====================================================================================
@@ -466,6 +472,18 @@ def delete_notice(request, pk):
         print(e)
         messages.error(request, "Something went wrong! Can't delete Notice")
 
+    return redirect('notice_list')
+
+@login_required(login_url='admin_login')
+def delete_all_notices(request):
+    Notice.objects.all().delete()
+    messages.success(request, "All notices deleted successfully!")
+    return redirect('notice_list')
+
+@login_required(login_url='admin_login')
+def delete_expired_notices(request):
+    Notice.objects.filter(expired_date__lte=timezone.now()).delete()
+    messages.success(request, "All expired notices deleted successfully!")
     return redirect('notice_list')
 
 
@@ -792,6 +810,12 @@ def delete_student(request, pk):
         print(e)
         messages.error(request, "Something went wrong! Can't delete Notice")
 
+    return redirect('student_list')
+
+@login_required(login_url='admin_login')
+def delete_all_students(request):
+    Students.objects.all().delete()
+    messages.success(request, "All students deleted successfully!")
     return redirect('student_list')
 
 

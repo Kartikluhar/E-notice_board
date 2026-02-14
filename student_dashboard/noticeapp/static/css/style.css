@@ -312,3 +312,68 @@ body.dark-mode .footer {
 body.dark-mode .text-muted {
     color: #bbbbbb !important;
 }
+
+/* =========================================
+   COMMON SCROLLABLE TABLE SYSTEM
+   (Notice | Student | Dept | Admin)
+========================================= */
+
+.common-table-wrapper {
+    max-height: 500px;      /* scroll area height */
+    overflow-y: auto;
+    overflow-x: auto;
+}
+
+/* Sticky Table Header */
+.common-table-wrapper thead th {
+    position: sticky;
+    top: 0;
+    background-color: #f4f7ff;
+    z-index: 5;
+}
+
+/* Dark Mode Sticky Header */
+body.dark-mode .common-table-wrapper thead th {
+    background-color: #1e1e1e;
+}
+
+/* Smooth Scrollbar */
+.common-table-wrapper::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+.common-table-wrapper::-webkit-scrollbar-thumb {
+    background: #b0c4de;
+    border-radius: 10px;
+}
+
+/* Hover effect remains */
+.common-table-wrapper tbody tr:hover {
+    background-color: #f0f8ff;
+}
+
+body.dark-mode .common-table-wrapper tbody tr:hover {
+    background-color: #2c2c2c;
+}
+/* =========================================
+   RESPONSIVE TABLE IMPROVEMENT
+========================================= */
+
+@media (max-width: 768px) {
+
+    .common-table-wrapper {
+        max-height: 400px;
+    }
+
+    .table th,
+    .table td {
+        font-size: 14px;
+        white-space: nowrap;
+    }
+
+    .table .btn-sm {
+        padding: 6px 10px;
+    }
+}
+

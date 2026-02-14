@@ -48,9 +48,11 @@ def admin_login(request):
 
     return render(request, 'admin/admin_login.html')
 
+
 @login_required(login_url='admin_login')
 def admin_profile(request):
     return render(request, 'admin/admin_profile.html')
+
 
 def admin_logout(request):
     logout(request)
@@ -337,13 +339,11 @@ def add_notice(request):
                 expired_date=expired_date
             )
 
-            emails = Students.objects.filter(
-                department=dept,
-                sem=sem
-            ).values_list('email', flat=True)
-
             subject = "New Notice Published – College Portal"
             if sem == 'all':
+                emails = Students.objects.filter(
+                    department=dept
+                ).values_list('email', flat=True)
                 html_message = f"""
                 <div style="font-family: Arial, sans-serif; background-color:#f4f6f9; padding:20px;">
 
@@ -385,6 +385,10 @@ def add_notice(request):
                 </div>
                 """
             else:
+                emails = Students.objects.filter(
+                    department=dept,
+                    sem=sem
+                ).values_list('email', flat=True)
                 html_message = f"""
                 <div style="font-family: Arial, sans-serif; background-color:#f4f6f9; padding:20px;">
 
@@ -491,13 +495,11 @@ def update_notice(request, pk):
 
             notice.save()
 
-            emails = Students.objects.filter(
-                department=dept,
-                sem=sem
-            ).values_list('email', flat=True)
-
             subject = "Notice has been Updated – College Portal"
             if sem == 'all':
+                emails = Students.objects.filter(
+                    department=dept
+                ).values_list('email', flat=True)
                 html_message = f"""
                 <div style="font-family: Arial, sans-serif; background-color:#f4f6f9; padding:20px;">
                     
@@ -539,6 +541,10 @@ def update_notice(request, pk):
                 </div>
                 """
             else:
+                emails = Students.objects.filter(
+                    department=dept,
+                    sem=sem
+                ).values_list('email', flat=True)
                 html_message = f"""
                 <div style="font-family: Arial, sans-serif; background-color:#f4f6f9; padding:20px;">
                     
@@ -879,12 +885,14 @@ def student_dboard(request):
     else:
         return redirect('student_login')
 
+
 def student_profile(request):
     if 'student' in request.session:
         student = get_object_or_404(Students, pk=request.session['student'])
     else:
         return redirect('student_login')
-    return render(request, 'student/student_profile.html',{'student':student})
+    return render(request, 'student/student_profile.html', {'student': student})
+
 
 def student_logout(request):
     request.session.flush()

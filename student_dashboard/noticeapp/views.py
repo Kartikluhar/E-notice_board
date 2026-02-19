@@ -322,140 +322,144 @@ def delete_all_departments(request):
 def add_notice(request):
     d_list = Department.objects.all()
     semesters = range(1, 13)
-    if request.method == 'POST':
-        try:
+    if d_list.count() > 0:
 
-            notice_title = request.POST.get('title')
-            notice_description = request.POST.get('description')
-            notice_attachment = request.POST.get('attachment')
-            department_id = request.POST.get('department')
-            sem = request.POST.get('sem')
-            expired_date_str = request.POST.get('expired_date')
+        if request.method == 'POST':
+            try:
 
-            expired_date = parse_datetime(expired_date_str)
+                notice_title = request.POST.get('title')
+                notice_description = request.POST.get('description')
+                notice_attachment = request.POST.get('attachment')
+                department_id = request.POST.get('department')
+                sem = request.POST.get('sem')
+                expired_date_str = request.POST.get('expired_date')
 
-            dept = Department.objects.get(id=department_id)
+                expired_date = parse_datetime(expired_date_str)
 
-            Notice.objects.create(
-                notice_title=notice_title,
-                notice_description=notice_description,
-                department=dept,
-                notice_attachment=notice_attachment,
-                sem=sem,
-                expired_date=expired_date
-            )
+                dept = Department.objects.get(id=department_id)
 
-            subject = "New Notice Published – College Portal"
-            if sem == 'all':
-                emails = Students.objects.filter(
-                    department=dept
-                ).values_list('email', flat=True)
-                html_message = f"""
-                <div style="font-family: Arial, sans-serif; background-color:#f4f6f9; padding:20px;">
-
-                    <div style="max-width:600px; margin:auto; background:white; padding:25px; border-radius:8px; box-shadow:0 0 10px rgba(0,0,0,0.1);">
-
-                        <div style="text-align:center;">
-                            <img src="https://ljku.edu.in/web/image/31899/FinalLJU1.png" width="80" />
-                            <h2 style="color:#0d6efd; margin-top:10px;">📢 New Notice Published</h2>
-                        </div>
-
-                        <p style="font-size:16px;">Dear Student,</p>
-
-                        <p style="font-size:15px; color:#555;">
-                            We would like to inform you that a new notice has been published on the College Portal.
-                        </p>
-
-                        <div style="background:#f8f9fa; padding:15px; border-left:5px solid #0d6efd; margin:20px 0;">
-                            <strong>Title:</strong> {notice_title}
-                        </div>
-
-                        <p style="font-size:15px;">
-                            Please log in to the portal to view the complete details.
-                        </p>
-
-                        <div style="text-align:center; margin-top:25px;">
-                            <a href="#" style="background:#0d6efd; color:white; padding:10px 20px; text-decoration:none; border-radius:5px;">
-                                View Notice
-                            </a>
-                        </div>
-
-                        <hr style="margin-top:30px;">
-
-                        <p style="font-size:14px; color:gray;">
-                            Regards,<br>
-                            <strong>College Administration</strong>
-                        </p>
-
-                    </div>
-                </div>
-                """
-            else:
-                emails = Students.objects.filter(
+                Notice.objects.create(
+                    notice_title=notice_title,
+                    notice_description=notice_description,
                     department=dept,
-                    sem=sem
-                ).values_list('email', flat=True)
-                html_message = f"""
-                <div style="font-family: Arial, sans-serif; background-color:#f4f6f9; padding:20px;">
+                    notice_attachment=notice_attachment,
+                    sem=sem,
+                    expired_date=expired_date
+                )
 
-                    <div style="max-width:600px; margin:auto; background:white; padding:25px; border-radius:8px; box-shadow:0 0 10px rgba(0,0,0,0.1);">
+                subject = "New Notice Published – College Portal"
+                if sem == 'all':
+                    emails = Students.objects.filter(
+                        department=dept
+                    ).values_list('email', flat=True)
+                    html_message = f"""
+                    <div style="font-family: Arial, sans-serif; background-color:#f4f6f9; padding:20px;">
 
-                        <div style="text-align:center;">
-                            <img src="https://ljku.edu.in/web/image/31899/FinalLJU1.png" width="80" />
-                            <h2 style="color:#198754; margin-top:10px;">📢 Department Notice</h2>
+                        <div style="max-width:600px; margin:auto; background:white; padding:25px; border-radius:8px; box-shadow:0 0 10px rgba(0,0,0,0.1);">
+
+                            <div style="text-align:center;">
+                                <img src="https://ljku.edu.in/web/image/31899/FinalLJU1.png" width="80" />
+                                <h2 style="color:#0d6efd; margin-top:10px;">📢 New Notice Published</h2>
+                            </div>
+
+                            <p style="font-size:16px;">Dear Student,</p>
+
+                            <p style="font-size:15px; color:#555;">
+                                We would like to inform you that a new notice has been published on the College Portal.
+                            </p>
+
+                            <div style="background:#f8f9fa; padding:15px; border-left:5px solid #0d6efd; margin:20px 0;">
+                                <strong>Title:</strong> {notice_title}
+                            </div>
+
+                            <p style="font-size:15px;">
+                                Please log in to the portal to view the complete details.
+                            </p>
+
+                            <div style="text-align:center; margin-top:25px;">
+                                <a href="#" style="background:#0d6efd; color:white; padding:10px 20px; text-decoration:none; border-radius:5px;">
+                                    View Notice
+                                </a>
+                            </div>
+
+                            <hr style="margin-top:30px;">
+
+                            <p style="font-size:14px; color:gray;">
+                                Regards,<br>
+                                <strong>College Administration</strong>
+                            </p>
+
                         </div>
-
-                        <p style="font-size:16px;">Dear Student,</p>
-
-                        <p style="font-size:15px; color:#555;">
-                            A new notice has been published for your department on the College Portal.
-                        </p>
-
-                        <div style="background:#f8f9fa; padding:15px; border-left:5px solid #198754; margin:20px 0;">
-                            <strong>Title:</strong> {notice_title}
-                        </div>
-
-                        <p style="font-size:15px;">
-                            Please log in to the portal to view the complete details.
-                        </p>
-
-                        <div style="text-align:center; margin-top:25px;">
-                            <a href="#" style="background:#198754; color:white; padding:10px 20px; text-decoration:none; border-radius:5px;">
-                                View Notice
-                            </a>
-                        </div>
-
-                        <hr style="margin-top:30px;">
-
-                        <p style="font-size:14px; color:gray;">
-                            Regards,<br>
-                            <strong>College Administration</strong>
-                        </p>
-
                     </div>
-                </div>
-                """
-            # send_mail(
-            #     subject,
-            #     message,
-            #     settings.DEFAULT_FROM_EMAIL,
-            #     list(emails),
-            #     fail_silently=True
-            # )
-            send_mail(
-                subject,
-                message="A new notice has been published.",  # fallback text
-                from_email=settings.DEFAULT_FROM_EMAIL,
-                recipient_list=list(emails),
-                html_message=html_message
-            )
+                    """
+                else:
+                    emails = Students.objects.filter(
+                        department=dept,
+                        sem=sem
+                    ).values_list('email', flat=True)
+                    html_message = f"""
+                    <div style="font-family: Arial, sans-serif; background-color:#f4f6f9; padding:20px;">
 
-            messages.success(request, "Notice is created!!")
+                        <div style="max-width:600px; margin:auto; background:white; padding:25px; border-radius:8px; box-shadow:0 0 10px rgba(0,0,0,0.1);">
 
-        except Exception as e:
-            print(e)
-            messages.error(request, "Something went wrong! Please try again.")
+                            <div style="text-align:center;">
+                                <img src="https://ljku.edu.in/web/image/31899/FinalLJU1.png" width="80" />
+                                <h2 style="color:#198754; margin-top:10px;">📢 Department Notice</h2>
+                            </div>
 
+                            <p style="font-size:16px;">Dear Student,</p>
+
+                            <p style="font-size:15px; color:#555;">
+                                A new notice has been published for your department on the College Portal.
+                            </p>
+
+                            <div style="background:#f8f9fa; padding:15px; border-left:5px solid #198754; margin:20px 0;">
+                                <strong>Title:</strong> {notice_title}
+                            </div>
+
+                            <p style="font-size:15px;">
+                                Please log in to the portal to view the complete details.
+                            </p>
+
+                            <div style="text-align:center; margin-top:25px;">
+                                <a href="#" style="background:#198754; color:white; padding:10px 20px; text-decoration:none; border-radius:5px;">
+                                    View Notice
+                                </a>
+                            </div>
+
+                            <hr style="margin-top:30px;">
+
+                            <p style="font-size:14px; color:gray;">
+                                Regards,<br>
+                                <strong>College Administration</strong>
+                            </p>
+
+                        </div>
+                    </div>
+                    """
+                # send_mail(
+                #     subject,
+                #     message,
+                #     settings.DEFAULT_FROM_EMAIL,
+                #     list(emails),
+                #     fail_silently=True
+                # )
+                send_mail(
+                    subject,
+                    message="A new notice has been published.",  # fallback text
+                    from_email=settings.DEFAULT_FROM_EMAIL,
+                    recipient_list=list(emails),
+                    html_message=html_message
+                )
+
+                messages.success(request, "Notice is created!!")
+
+            except Exception as e:
+                print(e)
+                messages.error(request, "Something went wrong! Please try again.")
+    else:
+        messages.warning(request, "Create a department first!")
+        return redirect('add_department')
     return render(request, 'notice/add_notice.html', {
         "departments": d_list,
         'semesters': semesters
@@ -669,81 +673,83 @@ def notice_list(request):
 def add_student(request):
     d_list = Department.objects.all()
     semesters = range(1, 13)
+    if d_list.count() > 0:
+        if request.method == "POST":
+            if 'single_student' in request.POST:
+                try:
+                    enrollment_no = request.POST.get('enrollment_no')
+                    email = request.POST.get('email')
+                    full_name = request.POST.get('full_name')
+                    password = request.POST.get('password')
+                    department_id = request.POST.get('department')
+                    sem = request.POST.get('sem')
 
-    if request.method == "POST":
-        if 'single_student' in request.POST:
-            try:
-                enrollment_no = request.POST.get('enrollment_no')
-                email = request.POST.get('email')
-                full_name = request.POST.get('full_name')
-                password = request.POST.get('password')
-                department_id = request.POST.get('department')
-                sem = request.POST.get('sem')
+                    if Students.objects.filter(enrollment_no=enrollment_no).exists():
+                        messages.error(
+                            request, "Student already exist with this enrollment no !!")
 
-                if Students.objects.filter(enrollment_no=enrollment_no).exists():
-                    messages.error(
-                        request, "Student already exist with this enrollment no !!")
+                    elif not re.match(password_validation, password):
+                        messages.error(
+                            request,
+                            "Password must contain 1 uppercase, 1 lowercase, 1 number, 1 special character and minimum 7 characters."
+                        )
 
-                elif not re.match(password_validation, password):
-                    messages.error(
-                        request,
-                        "Password must contain 1 uppercase, 1 lowercase, 1 number, 1 special character and minimum 7 characters."
-                    )
+                    elif enrollment_no == "" or full_name == "" or email == "" or password == "":
+                        messages.error(request, "Fields cannot be empty!")
 
-                elif enrollment_no == "" or full_name == "" or email == "" or password == "":
-                    messages.error(request, "Fields cannot be empty!")
-
-                else:
-
-                    dept = Department.objects.get(id=department_id)
-                    create_student = Students.objects.create(
-                        enrollment_no=enrollment_no,
-                        full_name=full_name,
-                        email=email,
-                        department=dept,
-                        password=make_password(password),
-                        sem=sem
-                    )
-
-                    if create_student:
-                        messages.success(
-                            request, "Student created successfully!!")
                     else:
-                        messages.error(request, "Something went wrong!!")
 
-            except Exception as e:
-                print(e)
-                messages.error(
-                    request, f"Something went wrong! can't add Student {e}")
-        else:
-            try:
-                csv_file = request.FILES.get('csv_file')
-                if not csv_file.name.endswith('.csv'):
-                    messages.error(request, "Please Upload valid csv file")
-                    return render(request, 'department/add_department.html')
-                else:
-                    decode_file = csv_file.read().decode('utf-8').splitlines()
-                    reader = csv.reader(decode_file)
-                    next(reader)
-                    students = []
-                    for row in reader:
-                        dept = Department.objects.get(d_code=row[4])
-                        students.append(Students(
-                            enrollment_no=row[0].strip(),
-                            email=row[1].strip(),
-                            full_name=row[2].strip(),
-                            password=make_password(row[3].strip()),
+                        dept = Department.objects.get(id=department_id)
+                        create_student = Students.objects.create(
+                            enrollment_no=enrollment_no,
+                            full_name=full_name,
+                            email=email,
                             department=dept,
-                            sem=row[5]
-                        ))
-                    Students.objects.bulk_create(
-                        students, ignore_conflicts=True)
-                    messages.success(
-                        request, "Students created successfully!")
-            except Exception as e:
-                messages.error(request, f"Something went wrong {e}")
-                return render(request, 'admin/admin_create_student.html')
+                            password=make_password(password),
+                            sem=sem
+                        )
 
+                        if create_student:
+                            messages.success(
+                                request, "Student created successfully!!")
+                        else:
+                            messages.error(request, "Something went wrong!!")
+
+                except Exception as e:
+                    print(e)
+                    messages.error(
+                        request, f"Something went wrong! can't add Student {e}")
+            else:
+                try:
+                    csv_file = request.FILES.get('csv_file')
+                    if not csv_file.name.endswith('.csv'):
+                        messages.error(request, "Please Upload valid csv file")
+                        return render(request, 'department/add_department.html')
+                    else:
+                        decode_file = csv_file.read().decode('utf-8').splitlines()
+                        reader = csv.reader(decode_file)
+                        next(reader)
+                        students = []
+                        for row in reader:
+                            dept = Department.objects.get(d_code=row[4])
+                            students.append(Students(
+                                enrollment_no=row[0].strip(),
+                                email=row[1].strip(),
+                                full_name=row[2].strip(),
+                                password=make_password(row[3].strip()),
+                                department=dept,
+                                sem=row[5]
+                            ))
+                        Students.objects.bulk_create(
+                            students, ignore_conflicts=True)
+                        messages.success(
+                            request, "Students created successfully!")
+                except Exception as e:
+                    messages.error(request, f"Something went wrong {e}")
+                    return render(request, 'admin/admin_create_student.html')
+    else:
+        messages.warning(request,"Add department first!")
+        return redirect('add_department')
     return render(request, 'admin/admin_create_student.html', {
         'departments': d_list,
         'semesters': semesters

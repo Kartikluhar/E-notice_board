@@ -787,7 +787,7 @@ def update_student(request, pk):
 
             messages.success(request, "Student Updated successfully!!")
 
-            return redirect('notice_list')
+            return redirect('student_list')
 
         except Exception as e:
             print(e)
